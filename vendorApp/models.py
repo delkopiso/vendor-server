@@ -1,16 +1,17 @@
-from django.db import models
-
-# Create your models here.
-
-class Article(object):
-    def __init__(self, _id, title, text, source, coverPic, section, logo, index):
-        self.id = _id
-        self.title = title
-        self.text = text
-        self.source = source
-        self.coverPic = coverPic
-        self.section = section
-        self.logo = logo
-        self.index = index
+from mongoengine import *
 
 
+class Article(Document):
+    title = StringField(required=True, max_length=200)
+    text = StringField(required=True, max_length=200)
+    source = StringField(required=True, max_length=200)
+    coverPic = StringField(required=True, max_length=200)
+    section = StringField(required=True, max_length=200)
+    logo = StringField(required=True, max_length=200)
+    index = IntField(required=True)
+
+    @queryset_manager
+    def objects(doc_cls, queryset):
+        # This may actually also be done by defining a default ordering for
+        # the document, but this illustrates the use of manager methods
+        return queryset.order_by('-index')
