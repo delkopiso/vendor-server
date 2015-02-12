@@ -9,7 +9,5 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^articles/$', 'vendorApp.views.articles'),
     url(r'^articles/popular/$', 'vendorApp.views.popular', name='popular'),
-    url(r'^articles/tech/$', 'vendorApp.views.tech', name='popular'),
+    url(r'^articles/tech/$', 'vendorApp.views.tech', name='tech'),
 )
-
- 	
