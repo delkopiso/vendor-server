@@ -59,7 +59,10 @@ WSGI_APPLICATION = 'Vendor.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
-DATABASES = {}
+# MongoDB settings
+DATABASES = {
+    'default': {'ENGINE': 'django.db.backends.dummy'}
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
