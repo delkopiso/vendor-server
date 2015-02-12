@@ -37,7 +37,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'vendorApp',
-    'rest_framework'
+    'rest_framework',
+    'gunicorn'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -58,12 +59,7 @@ WSGI_APPLICATION = 'Vendor.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+DATABASES = {}
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
