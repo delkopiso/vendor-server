@@ -4,5 +4,5 @@ django-filter==0.9.2
 djangorestframework==3.0.5
 gunicorn==19.2.1
 html2text==2014.12.29
-pymongo==2.8
+mongoengine==0.8.7
 requests==2.5.1
