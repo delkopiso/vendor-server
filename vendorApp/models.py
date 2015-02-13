@@ -8,10 +8,10 @@ class Article(Document):
     coverPic = StringField(required=True, max_length=200)
     section = StringField(required=True, max_length=200)
     logo = StringField(required=True, max_length=200)
-    index = IntField(required=True)
+    popularity = IntField(default=0)
 
     @queryset_manager
     def objects(doc_cls, queryset):
         # This may actually also be done by defining a default ordering for
         # the document, but this illustrates the use of manager methods
-        return queryset.order_by('-index')
+        return queryset.order_by('-popularity')
