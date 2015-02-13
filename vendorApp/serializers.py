@@ -10,7 +10,7 @@ class ArticleSerializer(serializers.Serializer):
     coverPic = serializers.CharField(required=True, max_length=200)
     section = serializers.CharField(required=True, max_length=200)
     logo = serializers.CharField(required=True, max_length=200)
-    index = serializers.IntegerField(required=True)
+    popularity = serializers.IntegerField(default=0)
 
     def restore_object(self, attrs, instance=None):
         if instance:
@@ -21,8 +21,8 @@ class ArticleSerializer(serializers.Serializer):
             instance.coverPic = attrs.get('coverPic', instance.coverPic)
             instance.section = attrs.get('section', instance.section)
             instance.logo = attrs.get('logo', instance.logo)
-            instance.index = attrs.get('index', instance.index)
+            instance.popularity = attrs.get('popularity', instance.popularity)
             return instance
 
         return Article(attrs.get('id'), attrs.get('title'), attrs.get('text'), attrs.get('source'),
-                       attrs.get('coverPic'), attrs.get('section'), attrs.get('logo'), attrs.get('index'))
+                       attrs.get('coverPic'), attrs.get('section'), attrs.get('logo'), attrs.get('popularity'))
