@@ -4,7 +4,7 @@ from mongoengine import *
 class Article(Document):
     title = StringField(required=True, max_length=200)
     text = StringField(required=True, max_length=200)
-    source = StringField(required=True, max_length=200)
+    source = StringField(required=True, unique=True, max_length=200)
     coverPic = StringField(required=True, max_length=200)
     section = StringField(required=True, max_length=200)
     logo = StringField(required=True, max_length=200)
