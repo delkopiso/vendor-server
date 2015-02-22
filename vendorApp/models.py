@@ -15,6 +15,4 @@ class Article(Document):
 
     @queryset_manager
     def objects(doc_cls, queryset):
-        # This may actually also be done by defining a default ordering for
-        # the document, but this illustrates the use of manager methods
-        return queryset.order_by('-popularity')
+        return queryset.order_by('-dateAdded -popularity -mixIndex')
