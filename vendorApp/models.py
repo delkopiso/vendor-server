@@ -2,12 +2,12 @@ from mongoengine import *
 
 
 class Article(Document):
-    title = StringField(required=True, max_length=200)
-    text = StringField(required=True, max_length=200)
-    source = StringField(required=True, unique=True, max_length=200)
-    coverPic = StringField(required=True, max_length=200)
-    section = StringField(required=True, max_length=200)
-    logo = StringField(required=True, max_length=200)
+    title = StringField(required=True, max_length=255)
+    text = StringField(required=True)
+    source = StringField(required=True, unique=True, max_length=255)
+    coverPic = StringField(required=True, max_length=255)
+    section = StringField(required=True, max_length=255)
+    logo = StringField(required=True, max_length=255)
     popularity = IntField(default=0)
 
     @queryset_manager

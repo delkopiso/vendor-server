@@ -3,13 +3,13 @@ from models import Article
 
 
 class ArticleSerializer(serializers.Serializer):
-    id = serializers.CharField(required=True, max_length=50)
-    title = serializers.CharField(required=True, max_length=200)
-    text = serializers.CharField(required=True, max_length=200)
-    source = serializers.CharField(required=True, max_length=200)
-    coverPic = serializers.CharField(required=True, max_length=200)
-    section = serializers.CharField(required=True, max_length=200)
-    logo = serializers.CharField(required=True, max_length=200)
+    id = serializers.CharField(required=True)
+    title = serializers.CharField(required=True, max_length=255)
+    text = serializers.CharField(required=True)
+    source = serializers.CharField(required=True, max_length=255)
+    coverPic = serializers.CharField(required=True, max_length=255)
+    section = serializers.CharField(required=True, max_length=255)
+    logo = serializers.CharField(required=True, max_length=255)
     popularity = serializers.IntegerField(default=0)
 
     def restore_object(self, attrs, instance=None):
