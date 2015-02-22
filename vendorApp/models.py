@@ -1,4 +1,5 @@
-from mongoengine import *
+import datetime
+from mongoengine import Document, StringField, IntField, DateTimeField, queryset_manager
 
 
 class Article(Document):
@@ -9,6 +10,8 @@ class Article(Document):
     section = StringField(required=True, max_length=255)
     logo = StringField(required=True, max_length=255)
     popularity = IntField(default=0)
+    mixIndex = IntField(default=0)
+    dateAdded = DateTimeField(default=datetime.datetime.now())
 
     @queryset_manager
     def objects(doc_cls, queryset):

@@ -1,3 +1,4 @@
+import datetime
 from rest_framework import serializers
 from models import Article
 
@@ -11,6 +12,8 @@ class ArticleSerializer(serializers.Serializer):
     section = serializers.CharField(required=True, max_length=255)
     logo = serializers.CharField(required=True, max_length=255)
     popularity = serializers.IntegerField(default=0)
+    mixIndex = serializers.IntegerField(default=0)
+    dateAdded = serializers.DateTimeField(default=datetime.datetime.now())
 
     def restore_object(self, attrs, instance=None):
         if instance:
