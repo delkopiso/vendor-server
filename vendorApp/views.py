@@ -6,7 +6,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from models import Article
 from serializers import ArticleSerializer
-from mongoengine import connect, DoesNotExist, Document
+from mongoengine import connect, DoesNotExist
 
 # connect to MongoDB
 conn_uri = os.environ.get('MONGOLAB_URI')
@@ -42,7 +42,7 @@ def get_articles_section(category=None):
     else:
         for article in Article.objects(section=category):
             results.append(article)
-    return multiKeySort(results, ['popularity', 'mixIndex', '-dateAdded'])
+    return multiKeySort(results, ['-popularity', 'mixIndex', '-dateAdded'])
 
 
 @csrf_exempt
