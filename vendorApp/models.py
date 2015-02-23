@@ -15,4 +15,4 @@ class Article(Document):
 
     @queryset_manager
     def objects(doc_cls, queryset):
-        return queryset.order_by('-mixIndex')
+        return queryset
