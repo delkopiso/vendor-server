@@ -75,7 +75,7 @@ def get_article(request, article_id):
 @renderer_classes((JSONRenderer,))
 def get_popular(request):
     serialized_list = ArticleSerializer(
-        get_articles_section(category='Popular', filters=['mixIndex', '-dateAdded']), many=True)
+        get_articles_section(category='Popular', filters=['-dateAdded', 'mixIndex']), many=True)
     return Response(serialized_list.data)
 
 
@@ -83,7 +83,7 @@ def get_popular(request):
 @renderer_classes((JSONRenderer,))
 def get_tech(request):
     serialized_list = ArticleSerializer(
-        get_articles_section(category='Tech', filters=['mixIndex', '-dateAdded']), many=True)
+        get_articles_section(category='Tech', filters=['-dateAdded', 'mixIndex']), many=True)
     return Response(serialized_list.data)
 
 
