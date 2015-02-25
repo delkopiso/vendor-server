@@ -10,15 +10,15 @@ from mongoengine import connect, DoesNotExist
 
 # connect to MongoDB
 conn_uri = os.environ.get('MONGOLAB_URI')
-db = 'vendor'
+DB_NAME = 'vendor'
 if conn_uri is not None:  # production env
-    connect(db, host=conn_uri)
+    connect(DB_NAME, host=conn_uri)
 else:  # development env, using localhost
-    connect(db)
+    connect(DB_NAME)
 
 
 # utility sorting function
-def multiKeySort(items, columns):
+def multi_key_sort(items, columns):
     from operator import itemgetter
     comparators = [((itemgetter(col[1:].strip()), -1) if col.startswith('-') else
                     (itemgetter(col.strip()), 1)) for col in columns]
@@ -34,7 +34,9 @@ def multiKeySort(items, columns):
 
 
 # utility query function
-def get_articles_section(category=None):
+def get_articles_section(category=None, filters=None):
+    if filters is None:
+        filters = ['-popularity', 'mixIndex', '-dateAdded']
     results = []
     if category is None:
         for article in Article.objects:
@@ -42,7 +44,7 @@ def get_articles_section(category=None):
     else:
         for article in Article.objects(section=category):
             results.append(article)
-    return multiKeySort(results, ['-popularity', 'mixIndex', '-dateAdded'])
+    return multi_key_sort(results, filters)
 
 
 @csrf_exempt
@@ -62,33 +64,6 @@ def get_article(request, article_id):
     except DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    serializer = ArticleSerializer(article)
-    return Response(serializer.data)
-
-
-@api_view(['GET'])
-@renderer_classes((JSONRenderer,))
-def get_popular(request):
-    serialized_list = ArticleSerializer(get_articles_section(category='Popular'), many=True)
-    return Response(serialized_list.data)
-
-
-@api_view(['GET'])
-@renderer_classes((JSONRenderer,))
-def get_tech(request):
-    serialized_list = ArticleSerializer(get_articles_section(category='Tech'), many=True)
-    return Response(serialized_list.data)
-
-
-@csrf_exempt
-@api_view(['GET'])
-@renderer_classes((JSONRenderer,))
-def like_article(request, article_id):
-    try:
-        article = Article.objects.get(id=article_id)
-    except DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
     article.popularity += 1
     article.save()
 
@@ -96,18 +71,50 @@ def like_article(request, article_id):
     return Response(serializer.data)
 
 
-@csrf_exempt
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
-def dislike_article(request, article_id):
-    try:
-        article = Article.objects.get(id=article_id)
-    except DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+def get_popular(request):
+    serialized_list = ArticleSerializer(
+        get_articles_section(category='Popular', filters=['mixIndex', '-dateAdded']), many=True)
+    return Response(serialized_list.data)
 
-    if article.popularity > 0:
-        article.popularity -= 1
-        article.save()
 
-    serializer = ArticleSerializer(article)
-    return Response(serializer.data)
+@api_view(['GET'])
+@renderer_classes((JSONRenderer,))
+def get_tech(request):
+    serialized_list = ArticleSerializer(
+        get_articles_section(category='Tech', filters=['mixIndex', '-dateAdded']), many=True)
+    return Response(serialized_list.data)
+
+
+# @csrf_exempt
+# @api_view(['GET'])
+# @renderer_classes((JSONRenderer,))
+# def like_article(request, article_id):
+#     try:
+#         article = Article.objects.get(id=article_id)
+#     except DoesNotExist:
+#         return Response(status=status.HTTP_404_NOT_FOUND)
+#
+#     article.popularity += 1
+#     article.save()
+#
+#     serializer = ArticleSerializer(article)
+#     return Response(serializer.data)
+#
+#
+# @csrf_exempt
+# @api_view(['GET'])
+# @renderer_classes((JSONRenderer,))
+# def dislike_article(request, article_id):
+#     try:
+#         article = Article.objects.get(id=article_id)
+#     except DoesNotExist:
+#         return Response(status=status.HTTP_404_NOT_FOUND)
+#
+#     if article.popularity > 0:
+#         article.popularity -= 1
+#         article.save()
+#
+#     serializer = ArticleSerializer(article)
+#     return Response(serializer.data)
