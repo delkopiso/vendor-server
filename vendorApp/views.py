@@ -73,9 +73,9 @@ def get_article(request, article_id):
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
-def get_popular(request):
+def get_gossip(request):
     serialized_list = ArticleSerializer(
-        get_articles_section(category='Popular', filters=['-dateAdded', 'mixIndex']), many=True)
+        get_articles_section(category='Gossip', filters=['-dateAdded', 'mixIndex']), many=True)
     return Response(serialized_list.data)
 
 
