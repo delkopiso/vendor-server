@@ -87,6 +87,22 @@ def get_tech(request):
     return Response(serialized_list.data)
 
 
+@api_view(['GET'])
+@renderer_classes((JSONRenderer,))
+def get_headlines(request):
+    serialized_list = ArticleSerializer(
+        get_articles_section(category='Headlines', filters=['-dateAdded', 'mixIndex']), many=True)
+    return Response(serialized_list.data)
+
+
+@api_view(['GET'])
+@renderer_classes((JSONRenderer,))
+def get_business(request):
+    serialized_list = ArticleSerializer(
+        get_articles_section(category='Business', filters=['-dateAdded', 'mixIndex']), many=True)
+    return Response(serialized_list.data)
+
+
 # @csrf_exempt
 # @api_view(['GET'])
 # @renderer_classes((JSONRenderer,))
