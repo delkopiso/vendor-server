@@ -11,6 +11,8 @@ urlpatterns = patterns('',
     url(r'^article/(?P<article_id>[0-9a-fA-F]{24})/$', 'vendorApp.views.get_article'),
     url(r'^articles/popular/$', 'vendorApp.views.get_gossip', name='gossip'),
     url(r'^articles/tech/$', 'vendorApp.views.get_tech', name='tech'),
+    url(r'^articles/popular/$', 'vendorApp.views.get_headlines', name='headlines'),
+    url(r'^articles/tech/$', 'vendorApp.views.get_business', name='business'),
     # url(r'^article/like/(?P<article_id>[0-9a-fA-F]{24})/$', 'vendorApp.views.like_article'),
     # url(r'^article/dislike/(?P<article_id>[0-9a-fA-F]{24})/$', 'vendorApp.views.dislike_article'),
 )
