@@ -6,7 +6,6 @@ from models import Article
 class ArticleSerializer(serializers.Serializer):
     id = serializers.CharField(required=True)
     title = serializers.CharField(required=True, max_length=255)
-    text = serializers.CharField(required=True)
     source = serializers.CharField(required=True, max_length=255)
     coverPic = serializers.CharField(required=True, max_length=255)
     section = serializers.CharField(required=True, max_length=255)
@@ -19,7 +18,6 @@ class ArticleSerializer(serializers.Serializer):
         if instance:
             instance.id = attrs.get('id', instance.id)
             instance.title = attrs.get('title', instance.title)
-            instance.text = attrs.get('text', instance.text)
             instance.source = attrs.get('source', instance.source)
             instance.coverPic = attrs.get('coverPic', instance.coverPic)
             instance.section = attrs.get('section', instance.section)
@@ -27,5 +25,5 @@ class ArticleSerializer(serializers.Serializer):
             instance.popularity = attrs.get('popularity', instance.popularity)
             return instance
 
-        return Article(attrs.get('id'), attrs.get('title'), attrs.get('text'), attrs.get('source'),
+        return Article(attrs.get('id'), attrs.get('title'), attrs.get('source'),
                        attrs.get('coverPic'), attrs.get('section'), attrs.get('logo'), attrs.get('popularity'))

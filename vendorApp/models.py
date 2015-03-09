@@ -4,7 +4,6 @@ from mongoengine import Document, StringField, IntField, DateTimeField, queryset
 
 class Article(Document):
     title = StringField(required=True, max_length=255)
-    text = StringField(required=True)
     source = StringField(required=True, unique=True, max_length=255)
     coverPic = StringField(required=True, max_length=255)
     section = StringField(required=True, max_length=255)
