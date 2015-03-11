@@ -11,6 +11,7 @@ from mongoengine import connect, DoesNotExist
 
 TRENDING_LIMIT = 25  # number of items
 TRENDING_LIFESPAN = 1  # number of days
+DEFAULT_FILTERS = ['-dateAdded', 'mixIndex']
 TRENDING_FILTERS = ['-popularity', 'mixIndex', '-dateAdded']
 
 # connect to MongoDB
@@ -38,25 +39,14 @@ def multi_key_sort(items, columns):
     return sorted(items, cmp=comparator)
 
 
-# utility query function
-def get_articles_section(category=None, filters=None):
-    if filters is None:
-        filters = ['-popularity', 'mixIndex', '-dateAdded']
-    results = []
-    if category is None:
-        for article in Article.objects:
-            results.append(article)
-    else:
-        for article in Article.objects(section=category):
-            results.append(article)
-    return multi_key_sort(results, filters)
-
-
 @csrf_exempt
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_articles(request):
-    serialized_list = ArticleSerializer(get_articles_section(), many=True)
+    results = []
+    for article in Article.objects:
+        results.append(article)
+    serialized_list = ArticleSerializer(results, many=True)
     return Response(serialized_list.data)
 
 
@@ -92,30 +82,38 @@ def get_trending(request):
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_gossip(request):
-    serialized_list = ArticleSerializer(
-        get_articles_section(category='Gossip', filters=['-dateAdded', 'mixIndex']), many=True)
+    results = []
+    for article in Article.objects(section='Gossip'):
+        results.append(article)
+    serialized_list = ArticleSerializer(multi_key_sort(results, DEFAULT_FILTERS), many=True)
     return Response(serialized_list.data)
 
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_tech(request):
-    serialized_list = ArticleSerializer(
-        get_articles_section(category='Tech', filters=['-dateAdded', 'mixIndex']), many=True)
+    results = []
+    for article in Article.objects(section='Tech'):
+        results.append(article)
+    serialized_list = ArticleSerializer(multi_key_sort(results, DEFAULT_FILTERS), many=True)
     return Response(serialized_list.data)
 
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_headlines(request):
-    serialized_list = ArticleSerializer(
-        get_articles_section(category='Headlines', filters=['-dateAdded', 'mixIndex']), many=True)
+    results = []
+    for article in Article.objects(section='Headlines'):
+        results.append(article)
+    serialized_list = ArticleSerializer(multi_key_sort(results, DEFAULT_FILTERS), many=True)
     return Response(serialized_list.data)
 
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_business(request):
-    serialized_list = ArticleSerializer(
-        get_articles_section(category='Business', filters=['-dateAdded', 'mixIndex']), many=True)
+    results = []
+    for article in Article.objects(section='Business'):
+        results.append(article)
+    serialized_list = ArticleSerializer(multi_key_sort(results, DEFAULT_FILTERS), many=True)
     return Response(serialized_list.data)
