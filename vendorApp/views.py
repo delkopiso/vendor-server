@@ -101,36 +101,3 @@ def get_business(request):
     serialized_list = ArticleSerializer(
         get_articles_section(category='Business', filters=['-dateAdded', 'mixIndex']), many=True)
     return Response(serialized_list.data)
-
-
-# @csrf_exempt
-# @api_view(['GET'])
-# @renderer_classes((JSONRenderer,))
-# def like_article(request, article_id):
-#     try:
-#         article = Article.objects.get(id=article_id)
-#     except DoesNotExist:
-#         return Response(status=status.HTTP_404_NOT_FOUND)
-#
-#     article.popularity += 1
-#     article.save()
-#
-#     serializer = ArticleSerializer(article)
-#     return Response(serializer.data)
-#
-#
-# @csrf_exempt
-# @api_view(['GET'])
-# @renderer_classes((JSONRenderer,))
-# def dislike_article(request, article_id):
-#     try:
-#         article = Article.objects.get(id=article_id)
-#     except DoesNotExist:
-#         return Response(status=status.HTTP_404_NOT_FOUND)
-#
-#     if article.popularity > 0:
-#         article.popularity -= 1
-#         article.save()
-#
-#     serializer = ArticleSerializer(article)
-#     return Response(serializer.data)
