@@ -11,6 +11,7 @@ class Article(Document):
     popularity = IntField(default=0)
     mixIndex = IntField(default=0)
     dateAdded = DateTimeField(default=datetime.datetime.now())
+    region = StringField(required=True, max_length=255)
 
     @queryset_manager
     def objects(doc_cls, queryset):

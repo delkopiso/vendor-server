@@ -13,6 +13,7 @@ class ArticleSerializer(serializers.Serializer):
     popularity = serializers.IntegerField(default=0)
     mixIndex = serializers.IntegerField(default=0)
     dateAdded = serializers.DateTimeField(default=datetime.datetime.now())
+    region = serializers.CharField(required=True, max_length=255)
 
     def restore_object(self, attrs, instance=None):
         if instance:
@@ -23,7 +24,8 @@ class ArticleSerializer(serializers.Serializer):
             instance.section = attrs.get('section', instance.section)
             instance.logo = attrs.get('logo', instance.logo)
             instance.popularity = attrs.get('popularity', instance.popularity)
+            instance.region = attrs.get('region', instance.region)
             return instance
 
-        return Article(attrs.get('id'), attrs.get('title'), attrs.get('source'),
+        return Article(attrs.get('id'), attrs.get('title'), attrs.get('source'), attrs.get('region'),
                        attrs.get('coverPic'), attrs.get('section'), attrs.get('logo'), attrs.get('popularity'))
