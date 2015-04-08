@@ -42,17 +42,6 @@ def multi_key_sort(items, columns):
 @csrf_exempt
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
-def get_articles(request):
-    results = []
-    for article in Article.objects:
-        results.append(article)
-    serialized_list = ArticleSerializer(results, many=True)
-    return Response(serialized_list.data)
-
-
-@csrf_exempt
-@api_view(['GET'])
-@renderer_classes((JSONRenderer,))
 def get_article(request, article_id):
     try:
         article = Article.objects.get(id=article_id)
@@ -66,54 +55,88 @@ def get_article(request, article_id):
     return Response(serializer.data)
 
 
-@api_view(['GET'])
-@renderer_classes((JSONRenderer,))
-def get_trending(request):
-    results = []
+def get_articles_by_region(region):
+    return [article for article in Article.objects(region=region)]
+
+
+def get_trending_by_region(region):
     today = datetime.datetime.today()
     age = datetime.timedelta(days=TRENDING_LIFESPAN)
     time_limit = today - age
-    for article in Article.objects(dateAdded__gte=time_limit)[:TRENDING_LIMIT]:
-        results.append(article)
-    serialized_list = ArticleSerializer(multi_key_sort(results, TRENDING_FILTERS), many=True)
+    articles = [article for article in Article.objects(region=region, dateAdded__gte=time_limit)[:TRENDING_LIMIT]]
+    return multi_key_sort(articles, TRENDING_FILTERS)
+
+
+def get_gossip_by_region(region):
+    articles = [article for article in Article.objects(region=region, section='Gossip')]
+    return multi_key_sort(articles, DEFAULT_FILTERS)
+
+
+def get_tech_by_region(region):
+    articles = [article for article in Article.objects(region=region, section='Tech')]
+    return multi_key_sort(articles, DEFAULT_FILTERS)
+
+
+def get_headlines_by_region(region):
+    articles = [article for article in Article.objects(region=region, section='Headlines')]
+    return multi_key_sort(articles, DEFAULT_FILTERS)
+
+
+def get_business_by_region(region):
+    articles = [article for article in Article.objects(region=region, section='Business')]
+    return multi_key_sort(articles, DEFAULT_FILTERS)
+
+
+@api_view(['GET'])
+@renderer_classes((JSONRenderer,))
+def get_region_all(request, region):
+    content = {
+        "trending": ArticleSerializer(get_trending_by_region(region), many=True).data,
+        "gossip": ArticleSerializer(get_gossip_by_region(region), many=True).data,
+        "tech": ArticleSerializer(get_tech_by_region(region), many=True).data,
+        "business": ArticleSerializer(get_business_by_region(region), many=True).data,
+        "headlines": ArticleSerializer(get_headlines_by_region(region), many=True).data
+    }
+    return Response(content)
+
+
+@api_view(['GET'])
+@renderer_classes((JSONRenderer,))
+def get_region_articles(request, region):
+    serialized_list = ArticleSerializer(get_articles_by_region(region), many=True)
     return Response(serialized_list.data)
 
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
-def get_gossip(request):
-    results = []
-    for article in Article.objects(section='Gossip'):
-        results.append(article)
-    serialized_list = ArticleSerializer(multi_key_sort(results, DEFAULT_FILTERS), many=True)
+def get_region_trending(request, region):
+    serialized_list = ArticleSerializer(get_trending_by_region(region), many=True)
     return Response(serialized_list.data)
 
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
-def get_tech(request):
-    results = []
-    for article in Article.objects(section='Tech'):
-        results.append(article)
-    serialized_list = ArticleSerializer(multi_key_sort(results, DEFAULT_FILTERS), many=True)
+def get_region_gossip(request, region):
+    serialized_list = ArticleSerializer(get_gossip_by_region(region), many=True)
     return Response(serialized_list.data)
 
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
-def get_headlines(request):
-    results = []
-    for article in Article.objects(section='Headlines'):
-        results.append(article)
-    serialized_list = ArticleSerializer(multi_key_sort(results, DEFAULT_FILTERS), many=True)
+def get_region_tech(request, region):
+    serialized_list = ArticleSerializer(get_tech_by_region(region), many=True)
     return Response(serialized_list.data)
 
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
-def get_business(request):
-    results = []
-    for article in Article.objects(section='Business'):
-        results.append(article)
-    serialized_list = ArticleSerializer(multi_key_sort(results, DEFAULT_FILTERS), many=True)
+def get_region_headlines(request, region):
+    serialized_list = ArticleSerializer(get_headlines_by_region(region), many=True)
+    return Response(serialized_list.data)
+
+
+@api_view(['GET'])
+@renderer_classes((JSONRenderer,))
+def get_region_business(request, region):
+    serialized_list = ArticleSerializer(get_business_by_region(region), many=True)
     return Response(serialized_list.data)
