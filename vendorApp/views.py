@@ -1,19 +1,20 @@
 import os
 import datetime
+
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
+from mongoengine import connect, DoesNotExist
+
 from models import Article
 from serializers import ArticleSerializer
-from mongoengine import connect, DoesNotExist
+
 
 STARTUP_LIMIT = 10  # number of items
 TRENDING_LIMIT = 25  # number of items
 TRENDING_LIFESPAN = 1  # number of days
-DEFAULT_FILTERS = ['-dateAdded', 'mixIndex']
-TRENDING_FILTERS = ['-popularity', 'mixIndex', '-dateAdded']
 
 # connect to MongoDB
 conn_uri = os.environ.get('MONGOLAB_URI')
@@ -22,22 +23,6 @@ if conn_uri is not None:  # production env
     connect(DB_NAME, host=conn_uri)
 else:  # development env, using localhost
     connect(DB_NAME)
-
-
-# utility sorting function
-def multi_key_sort(items, columns):
-    from operator import itemgetter
-    comparators = [((itemgetter(col[1:].strip()), -1) if col.startswith('-') else
-                    (itemgetter(col.strip()), 1)) for col in columns]
-
-    def comparator(left, right):
-        for fn, multiple in comparators:
-            result = cmp(fn(left), fn(right))
-            if result:
-                return multiple * result
-        else:
-            return 0
-    return sorted(items, cmp=comparator)
 
 
 @csrf_exempt
@@ -64,34 +49,46 @@ def get_trending_by_region(region, startup=False):
     today = datetime.datetime.today()
     age = datetime.timedelta(days=TRENDING_LIFESPAN)
     time_limit = today - age
-    articles = [article for article in Article.objects(region=region, dateAdded__gte=time_limit)[:TRENDING_LIMIT]] \
-        if not startup else \
-        [article for article in Article.objects(region=region, dateAdded__gte=time_limit)[:STARTUP_LIMIT]]
-    return multi_key_sort(articles, TRENDING_FILTERS)
+    articles = [article for article in
+                Article.objects(region=region, dateAdded__gte=time_limit).order_by('-popularity', 'mixIndex',
+                                                                                   '-dateAdded')[
+                :TRENDING_LIMIT]] if not startup else [article for article in Article.objects(region=region,
+                                                                                              dateAdded__gte=time_limit).order_by(
+        '-popularity', 'mixIndex', '-dateAdded')[:STARTUP_LIMIT]]
+    return articles
 
 
 def get_gossip_by_region(region, startup=False):
-    articles = [article for article in Article.objects(region=region, section='Gossip')] if not startup \
-        else [article for article in Article.objects(region=region, section='Gossip')[:STARTUP_LIMIT]]
-    return multi_key_sort(articles, DEFAULT_FILTERS)
+    articles = [article for article in Article.objects(region=region, section='Gossip').order_by('-dateAdded',
+                                                                                                 'mixIndex')] if not startup else [
+        article for article in
+        Article.objects(region=region, section='Gossip').order_by('-dateAdded', 'mixIndex')[:STARTUP_LIMIT]]
+    return articles
 
 
 def get_tech_by_region(region, startup=False):
-    articles = [article for article in Article.objects(region=region, section='Tech')] if not startup \
-        else [article for article in Article.objects(region=region, section='Tech')[:STARTUP_LIMIT]]
-    return multi_key_sort(articles, DEFAULT_FILTERS)
+    articles = [article for article in
+                Article.objects(region=region, section='Tech').order_by('-dateAdded', 'mixIndex')] if not startup else [
+        article for article in
+        Article.objects(region=region, section='Tech').order_by('-dateAdded', 'mixIndex')[:STARTUP_LIMIT]]
+    return articles
 
 
 def get_headlines_by_region(region, startup=False):
-    articles = [article for article in Article.objects(region=region, section='Headlines')] if not startup \
-        else [article for article in Article.objects(region=region, section='Headlines')[:STARTUP_LIMIT]]
-    return multi_key_sort(articles, DEFAULT_FILTERS)
+    articles = [article for article in Article.objects(region=region, section='Headlines').order_by('-dateAdded',
+                                                                                                    'mixIndex')] if not startup else [
+        article for article in
+        Article.objects(region=region, section='Headlines').order_by('-dateAdded', 'mixIndex')[:STARTUP_LIMIT]]
+    return articles
 
 
 def get_business_by_region(region, startup=False):
-    articles = [article for article in Article.objects(region=region, section='Business')] if not startup \
-        else [article for article in Article.objects(region=region, section='Business')[:STARTUP_LIMIT]]
-    return multi_key_sort(articles, DEFAULT_FILTERS)
+    articles = [article for article in Article.objects(region=region, section='Business')
+        .order_by('-dateAdded', 'mixIndex')] if not startup else [article for article in
+                                                                  Article.objects(region=region, section='Business')
+                                                                      .order_by('-dateAdded', 'mixIndex')[
+                                                                  :STARTUP_LIMIT]]
+    return articles
 
 
 @api_view(['GET'])
