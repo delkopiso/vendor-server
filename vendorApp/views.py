@@ -9,6 +9,7 @@ from models import Article
 from serializers import ArticleSerializer
 from mongoengine import connect, DoesNotExist
 
+STARTUP_LIMIT = 10  # number of items
 TRENDING_LIMIT = 25  # number of items
 TRENDING_LIFESPAN = 1  # number of days
 DEFAULT_FILTERS = ['-dateAdded', 'mixIndex']
@@ -59,31 +60,37 @@ def get_articles_by_region(region):
     return [article for article in Article.objects(region=region)]
 
 
-def get_trending_by_region(region):
+def get_trending_by_region(region, startup=False):
     today = datetime.datetime.today()
     age = datetime.timedelta(days=TRENDING_LIFESPAN)
     time_limit = today - age
-    articles = [article for article in Article.objects(region=region, dateAdded__gte=time_limit)[:TRENDING_LIMIT]]
+    articles = [article for article in Article.objects(region=region, dateAdded__gte=time_limit)[:TRENDING_LIMIT]] \
+        if not startup else \
+        [article for article in Article.objects(region=region, dateAdded__gte=time_limit)[:STARTUP_LIMIT]]
     return multi_key_sort(articles, TRENDING_FILTERS)
 
 
-def get_gossip_by_region(region):
-    articles = [article for article in Article.objects(region=region, section='Gossip')]
+def get_gossip_by_region(region, startup=False):
+    articles = [article for article in Article.objects(region=region, section='Gossip')] if not startup \
+        else [article for article in Article.objects(region=region, section='Gossip')[:STARTUP_LIMIT]]
     return multi_key_sort(articles, DEFAULT_FILTERS)
 
 
-def get_tech_by_region(region):
-    articles = [article for article in Article.objects(region=region, section='Tech')]
+def get_tech_by_region(region, startup=False):
+    articles = [article for article in Article.objects(region=region, section='Tech')] if not startup \
+        else [article for article in Article.objects(region=region, section='Tech')[:STARTUP_LIMIT]]
     return multi_key_sort(articles, DEFAULT_FILTERS)
 
 
-def get_headlines_by_region(region):
-    articles = [article for article in Article.objects(region=region, section='Headlines')]
+def get_headlines_by_region(region, startup=False):
+    articles = [article for article in Article.objects(region=region, section='Headlines')] if not startup \
+        else [article for article in Article.objects(region=region, section='Headlines')[:STARTUP_LIMIT]]
     return multi_key_sort(articles, DEFAULT_FILTERS)
 
 
-def get_business_by_region(region):
-    articles = [article for article in Article.objects(region=region, section='Business')]
+def get_business_by_region(region, startup=False):
+    articles = [article for article in Article.objects(region=region, section='Business')] if not startup \
+        else [article for article in Article.objects(region=region, section='Business')[:STARTUP_LIMIT]]
     return multi_key_sort(articles, DEFAULT_FILTERS)
 
 
@@ -96,6 +103,19 @@ def get_region_all(request, region):
         "tech": ArticleSerializer(get_tech_by_region(region), many=True).data,
         "business": ArticleSerializer(get_business_by_region(region), many=True).data,
         "headlines": ArticleSerializer(get_headlines_by_region(region), many=True).data
+    }
+    return Response(content)
+
+
+@api_view(['GET'])
+@renderer_classes((JSONRenderer,))
+def get_region_startup(request, region):
+    content = {
+        "trending": ArticleSerializer(get_trending_by_region(region, startup=True), many=True).data,
+        "gossip": ArticleSerializer(get_gossip_by_region(region, startup=True), many=True).data,
+        "tech": ArticleSerializer(get_tech_by_region(region, startup=True), many=True).data,
+        "business": ArticleSerializer(get_business_by_region(region, startup=True), many=True).data,
+        "headlines": ArticleSerializer(get_headlines_by_region(region, startup=True), many=True).data
     }
     return Response(content)
 
