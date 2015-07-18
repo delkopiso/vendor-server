@@ -31,3 +31,34 @@ Example:
 `vendor-server.herokuapp.com/regions/<region>/articles/business?page=2&size=15`
 
 This returns the second page in the result set of all Nigerian business articles in buckets of 15 each.
+
+## Response
+The API response looks like this:
+```
+{
+  "count":772,
+  "current_page":2,
+  "first_page":1,
+  "last_page":51,
+  "previous_page":1,
+  "next_page":3,
+  "results":[
+    {
+      "id":"xxx",
+      "title":"xxx",
+      "source":"http://www.example.com/article/",
+      "coverPic":"http://www.example.com/article/cover-pic.png",
+      "section":"Business",
+      "logo":"http://cdn.example.com/images/logo.png",
+      "popularity":0,
+      "mixIndex":3,
+      "dateAdded":"2015-07-14T01:00:04.843000",
+      "region":"nigeria"
+    },
+    {
+      ...
+    }
+  ]
+}
+```
+Where `results` holds the collection of articles being sought.
