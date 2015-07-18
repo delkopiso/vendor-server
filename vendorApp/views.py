@@ -1,7 +1,9 @@
 import os
 import datetime
+import math
 
 from django.views.decorators.csrf import csrf_exempt
+
 from rest_framework import status
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.renderers import JSONRenderer
@@ -9,12 +11,16 @@ from rest_framework.response import Response
 from mongoengine import connect, DoesNotExist
 
 from models import Article
+
 from serializers import ArticleSerializer
 
 
-STARTUP_LIMIT = 10  # number of items
 TRENDING_LIMIT = 25  # number of items
 TRENDING_LIFESPAN = 1  # number of days
+PAGE_SIZE_PARAM = 'size'
+PAGE_NUMBER_PARAM = 'page'
+DEFAULT_PAGE_SIZE = 20
+FIRST_PAGE = 1
 
 # connect to MongoDB
 conn_uri = os.environ.get('MONGOLAB_URI')
@@ -41,119 +47,121 @@ def get_article(request, article_id):
     return Response(serializer.data)
 
 
-def get_articles_by_region(region):
-    return [article for article in Article.objects(region=region)]
+def get_articles_by_region(region, limit, offset):
+    base_query = Article.objects(region=region)
+    query_size = len(base_query)
+    return base_query.skip(offset).limit(limit), query_size
 
 
-def get_trending_by_region(region, startup=False):
+def get_trending_by_region(region, limit, offset):
     today = datetime.datetime.today()
     age = datetime.timedelta(days=TRENDING_LIFESPAN)
     time_limit = today - age
-    articles = [article for article in
-                Article.objects(region=region, dateAdded__gte=time_limit).order_by('-popularity', 'mixIndex',
-                                                                                   '-dateAdded')[
-                :TRENDING_LIMIT]] if not startup else [article for article in Article.objects(region=region,
-                                                                                              dateAdded__gte=time_limit).order_by(
-        '-popularity', 'mixIndex', '-dateAdded')[:STARTUP_LIMIT]]
-    return articles
+    base_query = Article.objects(region=region, dateAdded__gte=time_limit)
+    query_size = len(base_query)
+    return base_query.order_by('-popularity', 'mixIndex', '-dateAdded').skip(offset).limit(limit), query_size
 
 
-def get_gossip_by_region(region, startup=False):
-    articles = [article for article in Article.objects(region=region, section='Gossip').order_by('-dateAdded',
-                                                                                                 'mixIndex')] if not startup else [
-        article for article in
-        Article.objects(region=region, section='Gossip').order_by('-dateAdded', 'mixIndex')[:STARTUP_LIMIT]]
-    return articles
+def get_gossip_by_region(region, limit, offset):
+    base_query = Article.objects(region=region, section='Gossip')
+    query_size = len(base_query)
+    return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
 
-def get_tech_by_region(region, startup=False):
-    articles = [article for article in
-                Article.objects(region=region, section='Tech').order_by('-dateAdded', 'mixIndex')] if not startup else [
-        article for article in
-        Article.objects(region=region, section='Tech').order_by('-dateAdded', 'mixIndex')[:STARTUP_LIMIT]]
-    return articles
+def get_tech_by_region(region, limit, offset):
+    base_query = Article.objects(region=region, section='Tech')
+    query_size = len(base_query)
+    return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
 
-def get_headlines_by_region(region, startup=False):
-    articles = [article for article in Article.objects(region=region, section='Headlines').order_by('-dateAdded',
-                                                                                                    'mixIndex')] if not startup else [
-        article for article in
-        Article.objects(region=region, section='Headlines').order_by('-dateAdded', 'mixIndex')[:STARTUP_LIMIT]]
-    return articles
+def get_headlines_by_region(region, limit, offset):
+    base_query = Article.objects(region=region, section='Headlines')
+    query_size = len(base_query)
+    return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
 
-def get_business_by_region(region, startup=False):
-    articles = [article for article in Article.objects(region=region, section='Business')
-        .order_by('-dateAdded', 'mixIndex')] if not startup else [article for article in
-                                                                  Article.objects(region=region, section='Business')
-                                                                      .order_by('-dateAdded', 'mixIndex')[
-                                                                  :STARTUP_LIMIT]]
-    return articles
+def get_business_by_region(region, limit, offset):
+    base_query = Article.objects(region=region, section='Business')
+    query_size = len(base_query)
+    return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
 
+'''
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_region_all(request, region):
+    current_page = int(request.GET.get(PAGE_NUMBER_PARAM, FIRST_PAGE))
+    page_size = int(request.GET.get(PAGE_SIZE_PARAM, DEFAULT_PAGE_SIZE))
+    offset = page_size * current_page
+    trending = ArticleSerializer(get_trending_by_region(region, page_size, offset)[0], many=True).data
+    gossip = ArticleSerializer(get_gossip_by_region(region, page_size, offset)[0], many=True).data
+    tech = ArticleSerializer(get_tech_by_region(region, page_size, offset)[0], many=True).data
+    business = ArticleSerializer(get_business_by_region(region, page_size, offset)[0], many=True).data
+    headlines = ArticleSerializer(get_headlines_by_region(region, page_size, offset)[0], many=True).data
     content = {
-        "trending": ArticleSerializer(get_trending_by_region(region), many=True).data,
-        "gossip": ArticleSerializer(get_gossip_by_region(region), many=True).data,
-        "tech": ArticleSerializer(get_tech_by_region(region), many=True).data,
-        "business": ArticleSerializer(get_business_by_region(region), many=True).data,
-        "headlines": ArticleSerializer(get_headlines_by_region(region), many=True).data
+        "trending": ,
+        "gossip": ,
+        "tech": ,
+        "business": ,
+        "headlines":
     }
     return Response(content)
+'''
 
 
-@api_view(['GET'])
-@renderer_classes((JSONRenderer,))
-def get_region_startup(request, region):
-    content = {
-        "trending": ArticleSerializer(get_trending_by_region(region, startup=True), many=True).data,
-        "gossip": ArticleSerializer(get_gossip_by_region(region, startup=True), many=True).data,
-        "tech": ArticleSerializer(get_tech_by_region(region, startup=True), many=True).data,
-        "business": ArticleSerializer(get_business_by_region(region, startup=True), many=True).data,
-        "headlines": ArticleSerializer(get_headlines_by_region(region, startup=True), many=True).data
+def generate_output(query_func, region, request):
+    current_page = int(request.GET.get(PAGE_NUMBER_PARAM, FIRST_PAGE))
+    current_page = current_page if current_page > FIRST_PAGE else FIRST_PAGE
+    page_size = int(request.GET.get(PAGE_SIZE_PARAM, DEFAULT_PAGE_SIZE))
+    offset = page_size * current_page
+    results = query_func(region, page_size, offset)
+    count = results[1]
+    last_page = int(math.ceil(count / page_size))
+    prev_page = current_page - 1 if current_page > FIRST_PAGE else None
+    next_page = current_page + 1 if current_page < last_page else None
+
+    return {
+        'first_page': FIRST_PAGE,
+        'previous_page': prev_page,
+        'current_page': current_page,
+        'next_page': next_page,
+        'last_page': last_page,
+        'count': count,
+        'results': ArticleSerializer(results[0], many=True).data
     }
-    return Response(content)
 
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_region_articles(request, region):
-    serialized_list = ArticleSerializer(get_articles_by_region(region), many=True)
-    return Response(serialized_list.data)
+    return Response(generate_output(get_articles_by_region, region, request))
 
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_region_trending(request, region):
-    serialized_list = ArticleSerializer(get_trending_by_region(region), many=True)
-    return Response(serialized_list.data)
+    return Response(generate_output(get_trending_by_region, region, request))
 
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_region_gossip(request, region):
-    serialized_list = ArticleSerializer(get_gossip_by_region(region), many=True)
-    return Response(serialized_list.data)
+    return Response(generate_output(get_gossip_by_region, region, request))
 
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_region_tech(request, region):
-    serialized_list = ArticleSerializer(get_tech_by_region(region), many=True)
-    return Response(serialized_list.data)
+    return Response(generate_output(get_tech_by_region, region, request))
 
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_region_headlines(request, region):
-    serialized_list = ArticleSerializer(get_headlines_by_region(region), many=True)
-    return Response(serialized_list.data)
+    return Response(generate_output(get_headlines_by_region, region, request))
 
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_region_business(request, region):
-    serialized_list = ArticleSerializer(get_business_by_region(region), many=True)
-    return Response(serialized_list.data)
+    return Response(generate_output(get_business_by_region, region, request))
