@@ -19,7 +19,7 @@ TRENDING_LIMIT = 25  # number of items
 TRENDING_LIFESPAN = 1  # number of days
 PAGE_SIZE_PARAM = 'size'
 PAGE_NUMBER_PARAM = 'page'
-DEFAULT_PAGE_SIZE = 20
+DEFAULT_PAGE_SIZE = 10
 FIRST_PAGE = 1
 
 # connect to MongoDB
