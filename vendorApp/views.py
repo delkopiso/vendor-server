@@ -15,7 +15,7 @@ from models import Article
 from serializers import ArticleSerializer
 
 
-TRENDING_LIMIT = 25  # number of items
+TRENDING_LIMIT = 30  # number of items
 TRENDING_LIFESPAN = 1  # number of days
 PAGE_SIZE_PARAM = 'size'
 PAGE_NUMBER_PARAM = 'page'
