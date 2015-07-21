@@ -86,10 +86,10 @@ def get_business_by_region(region, limit, offset):
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
 
-'''
+
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
-def get_region_all(request, region):
+def get_region_startup(request, region):
     current_page = int(request.GET.get(PAGE_NUMBER_PARAM, FIRST_PAGE))
     page_size = int(request.GET.get(PAGE_SIZE_PARAM, DEFAULT_PAGE_SIZE))
     offset = page_size * current_page
@@ -106,7 +106,7 @@ def get_region_all(request, region):
         "headlines":
     }
     return Response(content)
-'''
+
 
 
 def generate_output(query_func, region, request):
