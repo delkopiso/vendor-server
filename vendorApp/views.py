@@ -113,9 +113,9 @@ def generate_output(query_func, region, request):
     current_page = int(request.GET.get(PAGE_NUMBER_PARAM, FIRST_PAGE))
     current_page = current_page if current_page > FIRST_PAGE else FIRST_PAGE
     page_size = int(request.GET.get(PAGE_SIZE_PARAM, DEFAULT_PAGE_SIZE))
-    offset = page_size * current_page
+    offset = page_size * (current_page - 1)
     results = query_func(region, page_size, offset)
-    count = results[0]
+    count = results[1]
     last_page = int(math.ceil(count / page_size))
     prev_page = current_page - 1 if current_page > FIRST_PAGE else None
     next_page = current_page + 1 if current_page < last_page else None
