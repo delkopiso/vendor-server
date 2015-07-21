@@ -99,11 +99,11 @@ def get_region_startup(request, region):
     business = ArticleSerializer(get_business_by_region(region, page_size, offset)[0], many=True).data
     headlines = ArticleSerializer(get_headlines_by_region(region, page_size, offset)[0], many=True).data
     content = {
-        "trending": ,
-        "gossip": ,
-        "tech": ,
-        "business": ,
-        "headlines":
+        "trending": trending,
+        "gossip": gossip,
+        "tech": tech,
+        "business": business,
+        "headlines": headlines
     }
     return Response(content)
 
