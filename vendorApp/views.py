@@ -92,7 +92,7 @@ def get_business_by_region(region, limit, offset):
 def get_region_startup(request, region):
     current_page = int(request.GET.get(PAGE_NUMBER_PARAM, FIRST_PAGE))
     page_size = int(request.GET.get(PAGE_SIZE_PARAM, DEFAULT_PAGE_SIZE))
-    offset = page_size * current_page
+    offset = page_size * (current_page - 1)
     trending = ArticleSerializer(get_trending_by_region(region, page_size, offset)[0], many=True).data
     gossip = ArticleSerializer(get_gossip_by_region(region, page_size, offset)[0], many=True).data
     tech = ArticleSerializer(get_tech_by_region(region, page_size, offset)[0], many=True).data
