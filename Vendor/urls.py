@@ -7,7 +7,7 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^articles/(?P<article_id>[0-9a-fA-F]{24})/$', 'vendorApp.views.get_article'),
+    url(r'^article/(?P<article_id>[0-9a-fA-F]{24})/$', 'vendorApp.views.get_article'),
     # url(r'^startup/region/(?P<region>[a-z]+)/$', 'vendorApp.views.get_region_startup', name='start_combined'),
     # url(r'^region/(?P<region>[a-z]+)/$', 'vendorApp.views.get_region_all', name='combined'),
     url(r'^regions/(?P<region>[a-z]+)/articles/$', 'vendorApp.views.get_region_articles', name='all_articles'),
