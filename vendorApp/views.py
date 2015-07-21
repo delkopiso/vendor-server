@@ -58,7 +58,7 @@ def get_trending_by_region(region, limit, offset):
     age = datetime.timedelta(days=TRENDING_LIFESPAN)
     time_limit = today - age
     base_query = Article.objects(region=region, dateAdded__gte=time_limit)
-    query_size = len(base_query)
+    query_size = TRENDING_LIMIT
     return base_query.order_by('-popularity', 'mixIndex', '-dateAdded').skip(offset).limit(limit), query_size
 
 
@@ -141,11 +141,6 @@ def get_region_articles(request, region):
 @renderer_classes((JSONRenderer,))
 def get_region_trending(request, region):
     return Response(generate_output(get_trending_by_region, region, request))
-
-@api_view(['GET'])
-@renderer_classes((JSONRenderer,))
-def get_region_old_trending(request, region):
-    return Response(get_trending_by_region, region, request)
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
