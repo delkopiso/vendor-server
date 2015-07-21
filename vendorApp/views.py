@@ -86,7 +86,7 @@ def get_business_by_region(region, limit, offset):
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
 
-'''
+
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_region_all(request, region):
@@ -106,7 +106,7 @@ def get_region_all(request, region):
         "headlines":
     }
     return Response(content)
-'''
+
 
 
 def generate_output(query_func, region, request):
