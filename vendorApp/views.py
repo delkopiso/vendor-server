@@ -20,6 +20,7 @@ TRENDING_LIFESPAN = 1  # number of days
 PAGE_SIZE_PARAM = 'size'
 PAGE_NUMBER_PARAM = 'page'
 DEFAULT_PAGE_SIZE = 10
+STARTUP_PAGE_SIZE = 5
 FIRST_PAGE = 1
 
 # connect to MongoDB
@@ -91,7 +92,7 @@ def get_business_by_region(region, limit, offset):
 @renderer_classes((JSONRenderer,))
 def get_region_startup(request, region):
     current_page = int(request.GET.get(PAGE_NUMBER_PARAM, FIRST_PAGE))
-    page_size = int(request.GET.get(PAGE_SIZE_PARAM, DEFAULT_PAGE_SIZE))
+    page_size = int(request.GET.get(PAGE_SIZE_PARAM, STARTUP_PAGE_SIZE))
     offset = page_size * (current_page - 1)
     trending = ArticleSerializer(get_trending_by_region(region, page_size, offset)[0], many=True).data
     gossip = ArticleSerializer(get_gossip_by_region(region, page_size, offset)[0], many=True).data
