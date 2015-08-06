@@ -112,12 +112,18 @@ def get_region_startup(request, region):
     tech = ArticleSerializer(get_tech_by_region(region, page_size, offset)[0], many=True).data
     business = ArticleSerializer(get_business_by_region(region, page_size, offset)[0], many=True).data
     headlines = ArticleSerializer(get_headlines_by_region(region, page_size, offset)[0], many=True).data
+    fashion = ArticleSerializer(get_fashion_by_region(region, page_size, offset)[0], many=True).data
+    sports = ArticleSerializer(get_sports_by_region(region, page_size, offset)[0], many=True).data
+    politics = ArticleSerializer(get_politics_by_region(region, page_size, offset)[0], many=True).data
     content = {
         "trending": trending,
         "gossip": gossip,
         "tech": tech,
         "business": business,
         "headlines": headlines
+        "fashion": fashion
+        "sports": sports
+        "politics": politics
     }
     return Response(content)
 
