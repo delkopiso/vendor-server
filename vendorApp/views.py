@@ -120,9 +120,9 @@ def get_region_startup(request, region):
         "gossip": gossip,
         "tech": tech,
         "business": business,
-        "headlines": headlines
-        "fashion": fashion
-        "sports": sports
+        "headlines": headlines,
+        "fashion": fashion,
+        "sports": sports,
         "politics": politics
     }
     return Response(content)
