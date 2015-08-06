@@ -183,3 +183,13 @@ def get_region_business(request, region):
 @renderer_classes((JSONRenderer,))
 def get_region_sport(request, region):
     return Response(generate_output(get_sport_by_region, region, request))
+
+@api_view(['GET'])
+@renderer_classes((JSONRenderer,))
+def get_region_fashion(request, region):
+    return Response(generate_output(get_fashion_by_region, region, request))
+
+@api_view(['GET'])
+@renderer_classes((JSONRenderer,))
+def get_region_politics(request, region):
+    return Response(generate_output(get_politics_by_region, region, request))    
