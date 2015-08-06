@@ -86,8 +86,8 @@ def get_business_by_region(region, limit, offset):
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
-def get_sport_by_region(region, limit, offset):
-    base_query = Article.objects(region=region, section='Sport')
+def get_sports_by_region(region, limit, offset):
+    base_query = Article.objects(region=region, section='Sports')
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
@@ -181,8 +181,8 @@ def get_region_business(request, region):
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
-def get_region_sport(request, region):
-    return Response(generate_output(get_sport_by_region, region, request))
+def get_region_sports(request, region):
+    return Response(generate_output(get_sports_by_region, region, request))
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
