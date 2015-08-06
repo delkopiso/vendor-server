@@ -86,7 +86,20 @@ def get_business_by_region(region, limit, offset):
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
+def get_sport_by_region(region, limit, offset):
+    base_query = Article.objects(region=region, section='Sport')
+    query_size = len(base_query)
+    return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
+def get_fashion_by_region(region, limit, offset):
+    base_query = Article.objects(region=region, section='Fashion')
+    query_size = len(base_query)
+    return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
+
+def get_politics_by_region(region, limit, offset):
+    base_query = Article.objects(region=region, section='Politics')
+    query_size = len(base_query)
+    return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
@@ -165,3 +178,8 @@ def get_region_headlines(request, region):
 @renderer_classes((JSONRenderer,))
 def get_region_business(request, region):
     return Response(generate_output(get_business_by_region, region, request))
+
+@api_view(['GET'])
+@renderer_classes((JSONRenderer,))
+def get_region_sport(request, region):
+    return Response(generate_output(get_sport_by_region, region, request))

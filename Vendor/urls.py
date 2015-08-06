@@ -17,6 +17,7 @@ urlpatterns = patterns('',
     url(r'^regions/(?P<region>[a-z]+)/articles/tech/$', 'vendorApp.views.get_region_tech', name='tech'),
     url(r'^regions/(?P<region>[a-z]+)/articles/headlines/$', 'vendorApp.views.get_region_headlines', name='headlines'),
     url(r'^regions/(?P<region>[a-z]+)/articles/business/$', 'vendorApp.views.get_region_business', name='business'),
+    url(r'^regions/(?P<region>[a-z]+)/articles/sport/$', 'vendorApp.views.get_region_sport', name='sport'),
     # url(r'^article/like/(?P<article_id>[0-9a-fA-F]{24})/$', 'vendorApp.views.like_article'),
     # url(r'^article/dislike/(?P<article_id>[0-9a-fA-F]{24})/$', 'vendorApp.views.dislike_article'),
 )
