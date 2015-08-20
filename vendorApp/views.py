@@ -122,7 +122,7 @@ def get_region_startup(request, region):
         "business": business,
         "headlines": headlines,
         "fashion": fashion,
-        #"sports": sports,
+        "sports": sports,
         "politics": politics
     }
     return Response(content)
