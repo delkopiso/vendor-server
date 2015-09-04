@@ -101,6 +101,12 @@ def get_politics_by_region(region, limit, offset):
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
+def get_region_logos_for_section_do(region,section):
+    base_query = Article.objects(region=region, section=section.capitalize()).only("logo")
+    query_size = len(base_query)
+    return base_query.order_by('-dateAdded', 'mixIndex').distinct("logo"), query_size
+
+
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_region_startup(request, region):
@@ -148,6 +154,14 @@ def generate_output(query_func, region, request):
         'last_page': last_page,
         'count': count,
         'results': ArticleSerializer(results[0], many=True).data
+    }
+
+def generate_output_sectionwise(query_func, region,section, request):
+    results = query_func(region, section)
+    count = results[1]
+    return {
+        'count': count,
+        'results': results[0]
     }
 
 
@@ -198,4 +212,10 @@ def get_region_fashion(request, region):
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_region_politics(request, region):
-    return Response(generate_output(get_politics_by_region, region, request))    
+    return Response(generate_output(get_politics_by_region, region, request))  
+
+@api_view(['GET'])
+@renderer_classes((JSONRenderer,))
+def get_region_logos_for_section(request, region, section):
+    return Response(generate_output_sectionwise(get_region_logos_for_section_do, region,section, request))
+  
