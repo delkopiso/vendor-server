@@ -16,7 +16,7 @@ from serializers import ArticleSerializer
 
 
 TRENDING_LIMIT = 30  # number of items
-TRENDING_LIFESPAN = 1  # number of days
+TRENDING_LIFESPAN = 2  # number of days
 PAGE_SIZE_PARAM = 'size'
 PAGE_NUMBER_PARAM = 'page'
 DEFAULT_PAGE_SIZE = 5
