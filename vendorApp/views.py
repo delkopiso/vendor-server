@@ -54,6 +54,15 @@ def get_articles_by_region(region, limit, offset):
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
 
+def get_home_articles(region, limit, offset):
+    master = []
+    size = 10
+    for x in range(0, size):
+        master.append(Article.objects(region=region, section="Headlines").order_by('-dateAdded', 'mixIndex')[x])
+        master.append(Article.objects(region=region, section="Gossip").order_by('-dateAdded', 'mixIndex')[x])
+    return master
+        
+
 def get_trending_by_region(region, limit, offset):
     today = datetime.datetime.today()
     age = datetime.timedelta(days=TRENDING_LIFESPAN)
@@ -169,6 +178,11 @@ def generate_output_sectionwise(query_func, region,section, request):
 @renderer_classes((JSONRenderer,))
 def get_region_articles(request, region):
     return Response(generate_output(get_articles_by_region, region, request))
+
+@api_view(['GET'])
+@renderer_classes((JSONRenderer,))
+def get_region_home(request, region):
+    return Response(generate_output(get_home_articles, region, request))
 
 
 @api_view(['GET'])
