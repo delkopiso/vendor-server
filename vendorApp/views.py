@@ -53,7 +53,7 @@ def get_articles_by_region(region, limit, offset):
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
-
+'''
 def get_home_articles(region, limit, offset):
     master = []
     size = 10
@@ -62,6 +62,7 @@ def get_home_articles(region, limit, offset):
         master.append(Article.objects(region=region, section="Headlines").order_by('-dateAdded', 'mixIndex')[x])
         master.append(Article.objects(region=region, section="Gossip").order_by('-dateAdded', 'mixIndex')[x])
     return master, query_size
+'''
         
 
 def get_trending_by_region(region, limit, offset):
