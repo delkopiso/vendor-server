@@ -16,7 +16,7 @@ from serializers import ArticleSerializer
 
 
 TRENDING_LIMIT = 30  # number of items
-TRENDING_LIFESPAN = 2  # number of days
+TRENDING_LIFESPAN = 2   # number of days
 PAGE_SIZE_PARAM = 'size'
 PAGE_NUMBER_PARAM = 'page'
 DEFAULT_PAGE_SIZE = 5
@@ -51,7 +51,7 @@ def get_article(request, article_id):
 def get_articles_by_region(region, limit, offset):
     base_query = Article.objects(region=region)
     query_size = len(base_query)
-    return base_query.skip(offset).limit(limit), query_size
+    return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
 
 def get_trending_by_region(region, limit, offset):
@@ -104,7 +104,7 @@ def get_politics_by_region(region, limit, offset):
 def get_region_logos_for_section_do(region,section):
     base_query = Article.objects(region=region, section=section.capitalize()).only("logo")
     query_size = len(base_query)
-    return list(base_query.distinct("logo")), query_size
+    return base_query.order_by('-dateAdded', 'mixIndex').distinct("logo"), query_size
 
 
 @api_view(['GET'])
@@ -158,13 +158,10 @@ def generate_output(query_func, region, request):
 
 def generate_output_sectionwise(query_func, region,section, request):
     results = query_func(region, section)
-    print type(results[0])
-    l = results[0];
-    l.sort()
     count = results[1]
     return {
         'count': count,
-        'results': l
+        'results': results[0]
     }
 
 
