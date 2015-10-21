@@ -57,7 +57,7 @@ def get_articles_by_region(region, limit, offset):
 def get_home_articles(region, limit, offset):
     master = []
     size = 10
-    query_size - size*2
+    query_size = size*2
     for x in range(0, size):
         master.append(Article.objects(region=region, section="Headlines").order_by('-dateAdded', 'mixIndex')[x])
         master.append(Article.objects(region=region, section="Gossip").order_by('-dateAdded', 'mixIndex')[x])
