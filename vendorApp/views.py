@@ -160,6 +160,28 @@ def generate_output(query_func, region, request):
         'results': ArticleSerializer(results[0], many=True).data
     }
 
+def generate_section_output(query_func, region, sectionA, sectionB, sectionC, request):
+    current_page = int(request.GET.get(PAGE_NUMBER_PARAM, FIRST_PAGE))
+    current_page = current_page if current_page > FIRST_PAGE else FIRST_PAGE
+    page_size = int(request.GET.get(PAGE_SIZE_PARAM, DEFAULT_PAGE_SIZE))
+    offset = page_size * (current_page - 1)
+    results = query_func(region, sectionA, sectionB, sectionC, page_size, offset)
+    count = results[1]
+    last_page = int(math.ceil(count / page_size))
+    prev_page = current_page - 1 if current_page > FIRST_PAGE else None
+    next_page = current_page + 1 if current_page < last_page else None
+
+    return {
+        'first_page': FIRST_PAGE,
+        'previous_page': prev_page,
+        'current_page': current_page,
+        'next_page': next_page,
+        'last_page': last_page,
+        'count': count,
+        'results': ArticleSerializer(results[0], many=True).data
+    }
+
+
 def generate_output_sectionwise(query_func, region,section, request):
     results = query_func(region, section)
     count = results[1]
@@ -226,7 +248,7 @@ def get_region_politics(request, region):
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_region_section_articles(request, region, sectionA, sectionB, sectionC):
-    return Response(generate_output(get_section_articles_by_region, region, sectionA, sectionB, sectionC, request))  
+    return Response(generate_section_output(get_section_articles_by_region, region, sectionA, sectionB, sectionC, request))  
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
