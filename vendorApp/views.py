@@ -105,10 +105,12 @@ def get_section_by_region(region, section, limit, offset):
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
+'''
 def get_section_articles_by_region(region, sectionA, sectionB, sectionC, limit, offset):
     base_query = Article.objects(region=region, section__in=[sectionA.capitalize(), sectionB.capitalize(), sectionC.capitalize()])
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
+'''
 
 def get_region_logos_for_section_do(region,section):
     base_query = Article.objects(region=region, section=section.capitalize()).only("logo")
@@ -256,11 +258,12 @@ def get_region_politics(request, region):
 def get_region_section(request, section, region):
     return Response(generate_section_output(get_section_by_region, section, region, request))  
 
-
+'''
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_region_section_articles(request, region, sectionA, sectionB, sectionC):
     return Response(generate_section_output(get_section_articles_by_region, region, sectionA, sectionB, sectionC, request))  
+'''
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
