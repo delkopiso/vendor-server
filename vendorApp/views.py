@@ -1,4 +1,4 @@
-import os
+    import os
 import datetime
 import math
 
@@ -52,18 +52,6 @@ def get_articles_by_region(region, limit, offset):
     base_query = Article.objects(region=region)
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
-
-
-def get_home_articles(region, limit, offset):
-    master = []
-    size = 10
-    query_size = size*2
-    for x in range(0, size):
-        master.append(Article.objects(region=region, section="Headlines").order_by('-dateAdded', 'mixIndex')[x])
-        master.append(Article.objects(region=region, section="Gossip").order_by('-dateAdded', 'mixIndex')[x])
-    return master.skip(offset).limit(limit), query_size
-
-        
 
 def get_trending_by_region(region, limit, offset):
     today = datetime.datetime.today()
