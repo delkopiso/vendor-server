@@ -22,7 +22,7 @@ urlpatterns = patterns('',
     url(r'^regions/(?P<region>[a-z]+)/articles/fashion/$', 'vendorApp.views.get_region_fashion', name='fashion'),
     url(r'^regions/(?P<region>[a-z]+)/articles/politics/$', 'vendorApp.views.get_region_politics', name='politics'),
     url(r'^regions/(?P<region>[a-z]+)/articlelogos/(?P<section>[a-z]+)/$', 'vendorApp.views.get_region_logos_for_section'),
-    url(r'^regions/(?P<region>[a-z]+)/articles/(?P<sections[0]>[a-z]+)/$', 'vendorApp.views.get_region_articles_section'),
+    url(r'^regions/(?P<region>[a-z]+)/articles/home/(?P<sections[0]>[a-z]+)/$', 'vendorApp.views.get_region_articles_section'),
     # url(r'^article/like/(?P<article_id>[0-9a-fA-F]{24})/$', 'vendorApp.views.like_article'),
     # url(r'^article/dislike/(?P<article_id>[0-9a-fA-F]{24})/$', 'vendorApp.views.dislike_article'),
 )
