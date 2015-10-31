@@ -100,6 +100,11 @@ def get_politics_by_region(region, limit, offset):
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
+def get_section_by_region(region, section, limit, offset):
+    base_query = Article.objects(region=region, section=section.capitalize())
+    query_size = len(base_query)
+    return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
+
 def get_section_articles_by_region(region, sectionA, sectionB, sectionC, limit, offset):
     base_query = Article.objects(region=region, section__in=[sectionA.capitalize(), sectionB.capitalize(), sectionC.capitalize()])
     query_size = len(base_query)
@@ -160,7 +165,7 @@ def generate_output(query_func, region, request):
         'results': ArticleSerializer(results[0], many=True).data
     }
 
-def generate_section_output(query_func, region, sectionA, sectionB, sectionC, request):
+def generate_section_output(query_func, region, section, request):
     current_page = int(request.GET.get(PAGE_NUMBER_PARAM, FIRST_PAGE))
     current_page = current_page if current_page > FIRST_PAGE else FIRST_PAGE
     page_size = int(request.GET.get(PAGE_SIZE_PARAM, DEFAULT_PAGE_SIZE))
@@ -244,6 +249,12 @@ def get_region_fashion(request, region):
 @renderer_classes((JSONRenderer,))
 def get_region_politics(request, region):
     return Response(generate_output(get_politics_by_region, region, request))  
+
+@api_view(['GET'])
+@renderer_classes((JSONRenderer,))
+def get_region_section(request, section, region):
+    return Response(generate_output(get_section_by_region, section, region, request))  
+
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
