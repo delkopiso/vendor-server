@@ -225,7 +225,7 @@ def get_region_politics(request, region):
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
-def get_region_section_articles(request, region, sectonA, sectionB, sectionC):
+def get_region_section_articles(request, region, sectionA, sectionB, sectionC):
     return Response(generate_output(get_section_articles_by_region, region, sectionA, sectionB, sectionC, request))  
 
 @api_view(['GET'])
