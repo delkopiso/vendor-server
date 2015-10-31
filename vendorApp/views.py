@@ -49,7 +49,7 @@ def get_article(request, article_id):
 
 
 def get_articles_by_region(region, limit, offset):
-    base_query = Article.objects(region=region, section='Gossip')
+    base_query = Article.objects(region=region, section__in=['Gossip','Headlines'])
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
