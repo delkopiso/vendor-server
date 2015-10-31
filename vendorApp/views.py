@@ -170,7 +170,8 @@ def generate_section_output(query_func, region, section, request):
     current_page = current_page if current_page > FIRST_PAGE else FIRST_PAGE
     page_size = int(request.GET.get(PAGE_SIZE_PARAM, DEFAULT_PAGE_SIZE))
     offset = page_size * (current_page - 1)
-    results = query_func(region, sectionA, sectionB, sectionC, page_size, offset)
+    #results = query_func(region, sectionA, sectionB, sectionC, page_size, offset)
+    results = query_func(region, section, page_size, offset)
     count = results[1]
     last_page = int(math.ceil(count / page_size))
     prev_page = current_page - 1 if current_page > FIRST_PAGE else None
