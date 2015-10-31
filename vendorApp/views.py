@@ -100,6 +100,11 @@ def get_politics_by_region(region, limit, offset):
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
+def get_section_articles_by_region(region, sectionA, sectionB, sectionC, limit, offset):
+    base_query = Article.objects(region=region, section__in=[sectionA, sectionB, sectionC])
+    query_size = len(base_query)
+    return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
+
 def get_region_logos_for_section_do(region,section):
     base_query = Article.objects(region=region, section=section.capitalize()).only("logo")
     query_size = len(base_query)
@@ -217,6 +222,11 @@ def get_region_fashion(request, region):
 @renderer_classes((JSONRenderer,))
 def get_region_politics(request, region):
     return Response(generate_output(get_politics_by_region, region, request))  
+
+@api_view(['GET'])
+@renderer_classes((JSONRenderer,))
+def get_region_section_articles(request, region, sectonA, sectionB, sectionC):
+    return Response(generate_output(get_section_articles_by_region, region, sectionA, sectionB, sectionC, request))  
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
