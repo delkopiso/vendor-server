@@ -253,7 +253,7 @@ def get_region_politics(request, region):
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_region_section(request, section, region):
-    return Response(generate_output(get_section_by_region, section, region, request))  
+    return Response(generate_section_output(get_section_by_region, section, region, request))  
 
 
 @api_view(['GET'])
