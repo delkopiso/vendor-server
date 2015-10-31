@@ -53,6 +53,11 @@ def get_articles_by_region(region, limit, offset):
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
+def get_section_articles_by_region(region, ,sections, limit, offset):
+    base_query = Article.objects(region=region, section__in=sections)
+    query_size = len(base_query)
+    return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
+
 def get_trending_by_region(region, limit, offset):
     today = datetime.datetime.today()
     age = datetime.timedelta(days=TRENDING_LIFESPAN)
@@ -222,4 +227,10 @@ def get_region_politics(request, region):
 @renderer_classes((JSONRenderer,))
 def get_region_logos_for_section(request, region, section):
     return Response(generate_output_sectionwise(get_region_logos_for_section_do, region,section, request))
-  
+
+@api_view(['GET'])
+@renderer_classes((JSONRenderer,))
+def get_region_articles_sections(request, region, sections):
+    return Response(generate_output(get_section_articles_by_region, region, sections, request))  
+
+
