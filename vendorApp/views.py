@@ -101,7 +101,7 @@ def get_politics_by_region(region, limit, offset):
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
 def get_section_by_region(region, section, limit, offset):
-    base_query = Article.objects(region=region, section=section)
+    base_query = Article.objects(region=region, section="Gossip")
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
