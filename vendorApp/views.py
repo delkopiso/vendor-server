@@ -100,7 +100,7 @@ def get_politics_by_region(region, limit, offset):
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
-def get_section_by_region(region, section, limit, offset):
+def get_section_articles(region, section, limit, offset):
     base_query = Article.objects(region=region, section="Gossip")
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
@@ -276,7 +276,7 @@ def get_region_politics(request, region):
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_region_section(request, section, region):
-    return Response(generate_section_output(get_section_by_region, section, region, request))  
+    return Response(generate_section_output(get_section_articles, section, region, request))  
 
 
 @api_view(['GET'])
