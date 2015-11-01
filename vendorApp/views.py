@@ -188,7 +188,7 @@ def generate_section_output(query_func, region, section, request):
         'results': ArticleSerializer(results[0], many=True).data
     }
 
-def generate_section_combo_output(query_func, region, section, request):
+def generate_section_combo_output(query_func, region, sectionA, sectionB, sectionC, request):
     current_page = int(request.GET.get(PAGE_NUMBER_PARAM, FIRST_PAGE))
     current_page = current_page if current_page > FIRST_PAGE else FIRST_PAGE
     page_size = int(request.GET.get(PAGE_SIZE_PARAM, DEFAULT_PAGE_SIZE))
