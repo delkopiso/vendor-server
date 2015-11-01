@@ -106,8 +106,8 @@ def get_section_articles(region, section, limit, offset):
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
 
-def get_section_articles_combo(region, sectionA, sectionB, sectionC, limit, offset):
-    base_query = Article.objects(region=region, section__in=[sectionA.capitalize(), sectionB.capitalize(), sectionC.capitalize()])
+def get_section_articles_combo(region, sectionA, sectionB, sectionC, sectionD, sectionE, sectionF, sectionG, limit, offset):
+    base_query = Article.objects(region=region, section__in=[sectionA.capitalize(), sectionB.capitalize(), sectionC.capitalize(), sectionD.capitalize(), sectionE.capitalize(), sectionF.capitalize(), sectionG.capitalize()])
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
@@ -188,12 +188,12 @@ def generate_section_output(query_func, region, section, request):
         'results': ArticleSerializer(results[0], many=True).data
     }
 
-def generate_section_combo_output(query_func, region, sectionA, sectionB, sectionC, request):
+def generate_section_combo_output(query_func, region, sectionA, sectionB, sectionC, sectionD, sectionE, sectionF, sectionG, request):
     current_page = int(request.GET.get(PAGE_NUMBER_PARAM, FIRST_PAGE))
     current_page = current_page if current_page > FIRST_PAGE else FIRST_PAGE
     page_size = int(request.GET.get(PAGE_SIZE_PARAM, DEFAULT_PAGE_SIZE))
     offset = page_size * (current_page - 1)
-    results = query_func(region, sectionA, sectionB, sectionC, page_size, offset)
+    results = query_func(region, sectionA, sectionB, sectionC, sectionD, sectionE, sectionF, sectionG, page_size, offset)
     count = results[1]
     last_page = int(math.ceil(count / page_size))
     prev_page = current_page - 1 if current_page > FIRST_PAGE else None
@@ -281,12 +281,14 @@ def get_region_section(request, section, region):
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
-def get_region_section_combo(request, region, sectionA, sectionB, sectionC=""):
-    return Response(generate_section_combo_output(get_section_articles_combo, region, sectionA, sectionB, sectionC, request))  
+def get_region_section_combo(request, region, sectionA, sectionB, sectionC="", sectionD="", sectionE="", sectionF="",sectionG=""):
+    return Response(generate_section_combo_output(get_section_articles_combo, region, sectionA, sectionB, sectionC, sectionD, sectionE, sectionF, sectionG request))  
 
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_region_logos_for_section(request, region, section):
     return Response(generate_output_sectionwise(get_region_logos_for_section_do, region,section, request))
+
+
   
