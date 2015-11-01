@@ -282,7 +282,7 @@ def get_region_section(request, section, region):
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_region_section_combo(request, region, sectionA, sectionB, sectionC="", sectionD="", sectionE="", sectionF="",sectionG=""):
-    return Response(generate_section_combo_output(get_section_articles_combo, region, sectionA, sectionB, sectionC, sectionD, sectionE, sectionF, sectionG request))  
+    return Response(generate_section_combo_output(get_section_articles_combo, region, sectionA, sectionB, sectionC, sectionD, sectionE, sectionF, sectionG, request))  
 
 
 @api_view(['GET'])
