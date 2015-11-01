@@ -101,16 +101,16 @@ def get_politics_by_region(region, limit, offset):
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
 def get_section_by_region(region, section, limit, offset):
-    base_query = Article.objects(region="nigeria", section="Gossip")
+    base_query = Article.objects(region=region, section="Gossip")
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
-'''
+
 def get_section_articles_by_region(region, sectionA, sectionB, sectionC, limit, offset):
     base_query = Article.objects(region=region, section__in=[sectionA.capitalize(), sectionB.capitalize(), sectionC.capitalize()])
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
-'''
+
 
 def get_region_logos_for_section_do(region,section):
     base_query = Article.objects(region=region, section=section.capitalize()).only("logo")
@@ -172,8 +172,8 @@ def generate_section_output(query_func, region, section, request):
     current_page = current_page if current_page > FIRST_PAGE else FIRST_PAGE
     page_size = int(request.GET.get(PAGE_SIZE_PARAM, DEFAULT_PAGE_SIZE))
     offset = page_size * (current_page - 1)
-    #results = query_func(region, sectionA, sectionB, sectionC, page_size, offset)
-    results = query_func(region, section.capitalize(), page_size, offset)
+    results = query_func(region, sectionA, sectionB, sectionC, page_size, offset)
+    #results = query_func(region, section, page_size, offset)
     count = results[1]
     last_page = int(math.ceil(count / page_size))
     prev_page = current_page - 1 if current_page > FIRST_PAGE else None
