@@ -12,7 +12,7 @@ from mongoengine import connect, DoesNotExist
 
 from models import Article
 
-from serializers import ArticleSerializer
+from serializers import ArticleSerializer, LogoSerializer
 
 
 TRENDING_LIMIT = 30  # number of items
