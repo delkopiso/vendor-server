@@ -227,7 +227,7 @@ def generate_output_sectionwise(query_func, region,section, request):
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_logo_all(request, region):
-    gossip = get_region_logos_for_section_all(region)[0]
+    gossip = get_region_logos_for_section_all(region, request)[0]
     
     content = {
         "gossip": gossip,
