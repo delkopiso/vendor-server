@@ -225,12 +225,13 @@ def get_region_startup(request, region):
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_logo_all(request, region):
-    tach = gossip = get_region_logos_for_section_all(region, "Tech")[0]
+    tech = gossip = get_region_logos_for_section_all(region, "Tech")[0]
     gossip = get_region_logos_for_section_all(region, "Gossip")[0]
 
     
     content = {
         "gossip": gossip,
+        "tech": tech
     }
     
     return Response(content)
