@@ -224,10 +224,10 @@ def get_region_startup(request, region):
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_logo_all(request, region):
-    gossip = LogoSerializer(get_region_logos_for_section_all(region), many=True).data
+    gossip = LogoSerializer(get_region_logos_for_section_all(region)[0], many=True).data
     
     content = {
-        "gossip": "Is this thing on",
+        "gossip": gossip,
     }
     
     return Response(content)
