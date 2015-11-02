@@ -192,6 +192,7 @@ def generate_output_sectionwise(query_func, region,section, request):
 def get_region_logos_for_section_all(region):
     base_query = Article.objects(region=region, section="Gossip").only("logo")
     query_size = len(base_query)
+    
     return base_query.order_by('-dateAdded', 'mixIndex').distinct("logo"), query_size
 
 @api_view(['GET'])
@@ -224,7 +225,7 @@ def get_region_startup(request, region):
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_logo_all(request, region):
-    gossip = LogoSerializer(get_region_logos_for_section_all(region)[0], many=True).data
+    gossip = get_region_logos_for_section_all(region)[0]
     
     content = {
         "gossip": gossip,
