@@ -227,11 +227,20 @@ def get_region_startup(request, region):
 def get_logo_all(request, region):
     tech = gossip = get_region_logos_for_section_all(region, "Tech")[0]
     gossip = get_region_logos_for_section_all(region, "Gossip")[0]
-
+    business = get_region_logos_for_section_all(region, "Business")[0]
+    headlines = get_region_logos_for_section_all(region, "Headlines")[0]
+    fashion = get_region_logos_for_section_all(region, "Fashion")[0]
+    sports = get_region_logos_for_section_all(region, "Sports")[0]
+    politics = get_region_logos_for_section_all(region, "Politics")[0]
     
     content = {
         "gossip": gossip,
         "tech": tech
+        "business": business,
+        "headlines": headlines,
+        "fashion": fashion,
+        "sports": sports,
+        "politics": politics
     }
     
     return Response(content)
