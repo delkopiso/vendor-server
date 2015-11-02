@@ -117,40 +117,6 @@ def get_region_logos_for_section_do(region,section):
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').distinct("logo"), query_size
 
-def get_region_logos_for_section_all(region):
-    base_query = Article.objects(region=region, section="Gossip").only("logo")
-    query_size = len(base_query)
-    return base_query.order_by('-dateAdded', 'mixIndex').distinct("logo"), query_size
-
-
-@api_view(['GET'])
-@renderer_classes((JSONRenderer,))
-def get_region_startup(request, region):
-    current_page = int(request.GET.get(PAGE_NUMBER_PARAM, FIRST_PAGE))
-    page_size = int(request.GET.get(PAGE_SIZE_PARAM, STARTUP_PAGE_SIZE))
-    offset = page_size * (current_page - 1)
-    trending = ArticleSerializer(get_trending_by_region(region, page_size, offset)[0], many=True).data
-    gossip = ArticleSerializer(get_gossip_by_region(region, page_size, offset)[0], many=True).data
-    tech = ArticleSerializer(get_tech_by_region(region, page_size, offset)[0], many=True).data
-    business = ArticleSerializer(get_business_by_region(region, page_size, offset)[0], many=True).data
-    headlines = ArticleSerializer(get_headlines_by_region(region, page_size, offset)[0], many=True).data
-    fashion = ArticleSerializer(get_fashion_by_region(region, page_size, offset)[0], many=True).data
-    sports = ArticleSerializer(get_sports_by_region(region, page_size, offset)[0], many=True).data
-    politics = ArticleSerializer(get_politics_by_region(region, page_size, offset)[0], many=True).data
-    content = {
-        "trending": trending,
-        "gossip": gossip,
-        "tech": tech,
-        "business": business,
-        "headlines": headlines,
-        "fashion": fashion,
-        "sports": sports,
-        "politics": politics
-    }
-    return Response(content)
-
-
-
 def generate_output(query_func, region, request):
     current_page = int(request.GET.get(PAGE_NUMBER_PARAM, FIRST_PAGE))
     current_page = current_page if current_page > FIRST_PAGE else FIRST_PAGE
@@ -223,11 +189,42 @@ def generate_output_sectionwise(query_func, region,section, request):
         'results': results[0]
     }
 
+def get_region_logos_for_section_all(region):
+    base_query = Article.objects(region=region, section="Gossip").only("logo")
+    query_size = len(base_query)
+    return base_query.order_by('-dateAdded', 'mixIndex').distinct("logo"), query_size
+
+@api_view(['GET'])
+@renderer_classes((JSONRenderer,))
+def get_region_startup(request, region):
+    current_page = int(request.GET.get(PAGE_NUMBER_PARAM, FIRST_PAGE))
+    page_size = int(request.GET.get(PAGE_SIZE_PARAM, STARTUP_PAGE_SIZE))
+    offset = page_size * (current_page - 1)
+    trending = ArticleSerializer(get_trending_by_region(region, page_size, offset)[0], many=True).data
+    gossip = ArticleSerializer(get_gossip_by_region(region, page_size, offset)[0], many=True).data
+    tech = ArticleSerializer(get_tech_by_region(region, page_size, offset)[0], many=True).data
+    business = ArticleSerializer(get_business_by_region(region, page_size, offset)[0], many=True).data
+    headlines = ArticleSerializer(get_headlines_by_region(region, page_size, offset)[0], many=True).data
+    fashion = ArticleSerializer(get_fashion_by_region(region, page_size, offset)[0], many=True).data
+    sports = ArticleSerializer(get_sports_by_region(region, page_size, offset)[0], many=True).data
+    politics = ArticleSerializer(get_politics_by_region(region, page_size, offset)[0], many=True).data
+    content = {
+        "trending": trending,
+        "gossip": gossip,
+        "tech": tech,
+        "business": business,
+        "headlines": headlines,
+        "fashion": fashion,
+        "sports": sports,
+        "politics": politics
+    }
+    return Response(content)
+
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_logo_all(request, region):
-    gossip = get_region_logos_for_section_all(region, request)[0]
+    gossip = ArticleSerializer(get_region_logos_for_section_all(region)[0], many=True).data
     
     content = {
         "gossip": gossip,
@@ -305,7 +302,7 @@ def get_region_section_combo(request, region, sectionA, sectionB, sectionC="", s
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_region_logos_for_section(request, region, section):
-    return Response(generate_output_sectionwise(get_region_logos_for_section_do, region,section, request))
+    return Response(generate_output_sectionwise(get_region_logos_for_section_do, region, section, request))
 
 
   
