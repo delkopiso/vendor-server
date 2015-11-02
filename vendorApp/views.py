@@ -223,7 +223,7 @@ def get_region_startup(request, region):
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
-def get_logo_all(region):
+def get_logo_all(region, request):
     gossip = LogoSerializer(get_region_logos_for_section_all(region)[0], many=True).data
     
     content = {
