@@ -23,4 +23,5 @@ urlpatterns = patterns('',
     url(r'^regions/(?P<region>[a-z]+)/articles/(?P<sectionA>[a-z]+)/(?P<sectionB>[a-z]+)/(?P<sectionC>[a-z]+)/(?P<sectionD>[a-z]+)/(?P<sectionE>[a-z]+)/(?P<sectionF>[a-z]+)/$', 'vendorApp.views.get_region_section_combo'),
     url(r'^regions/(?P<region>[a-z]+)/articles/(?P<sectionA>[a-z]+)/(?P<sectionB>[a-z]+)/(?P<sectionC>[a-z]+)/(?P<sectionD>[a-z]+)/(?P<sectionE>[a-z]+)/(?P<sectionF>[a-z]+)/(?P<sectionG>[a-z]+)/$', 'vendorApp.views.get_region_section_combo'),
     url(r'^regions/(?P<region>[a-z]+)/articlelogos/(?P<section>[a-z]+)/$', 'vendorApp.views.get_region_logos_for_section'),
+    url(r'^regions/(?P<region>[a-z]+)/articlelogos/all/$', 'vendorApp.views.get_logo_all'),
     )

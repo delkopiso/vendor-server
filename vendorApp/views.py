@@ -221,6 +221,28 @@ def generate_output_sectionwise(query_func, region,section, request):
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
+def get_logo_all(request, region):
+    gossip = ArticleSerializer(get_region_logos_for_section_do(region,"Gossip")[0], many=True).data
+    tech = ArticleSerializer(get_region_logos_for_section_do(region,"Tech")[0], many=True).data
+    business = ArticleSerializer(get_region_logos_for_section_do(region,"Business")[0], many=True).data
+    headlines = ArticleSerializer(get_region_logos_for_section_do(region,"Headlines")[0], many=True).data
+    fashion = ArticleSerializer(get_region_logos_for_section_do(region,"Fashion")[0], many=True).data
+    sports = ArticleSerializer(get_region_logos_for_section_do(region,"Sports")[0], many=True).data
+    politics = ArticleSerializer(get_region_logos_for_section_do(region,"Politics")[0], many=True).data
+    content = {
+        "gossip": gossip,
+        "tech": tech,
+        "business": business,
+        "headlines": headlines,
+        "fashion": fashion,
+        "sports": sports,
+        "politics": politics
+    }
+    return Response(content)
+
+
+@api_view(['GET'])
+@renderer_classes((JSONRenderer,))
 def get_region_articles(request, region):
     return Response(generate_output(get_articles_by_region, region, request))
 
