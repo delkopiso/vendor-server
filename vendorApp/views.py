@@ -227,7 +227,7 @@ def get_logo_all(request, region):
     gossip = LogoSerializer(get_region_logos_for_section_all(region), many=True).data
     
     content = {
-        "gossip": gossip,
+        "gossip": "Is this thing on",
     }
     
     return Response(content)
