@@ -235,7 +235,7 @@ def get_logo_all(request, region):
     
     content = {
         "gossip": gossip,
-        "tech": tech
+        "tech": tech,
         "business": business,
         "headlines": headlines,
         "fashion": fashion,
