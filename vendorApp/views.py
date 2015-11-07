@@ -320,6 +320,16 @@ def get_region_politics(request, region):
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
+def get_region_food(request, region):
+    return Response(generate_output(get_food_by_region, region, request))  
+
+@api_view(['GET'])
+@renderer_classes((JSONRenderer,))
+def get_region_lifestyle(request, region):
+    return Response(generate_output(get_lifestye_by_region, region, request))  
+
+@api_view(['GET'])
+@renderer_classes((JSONRenderer,))
 def get_region_section(request, section, region):
     return Response(generate_section_output(get_section_articles, section, region, request))  
 
