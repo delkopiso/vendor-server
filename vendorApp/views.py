@@ -100,6 +100,16 @@ def get_politics_by_region(region, limit, offset):
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
+def get_food_by_region(region, limit, offset):
+    base_query = Article.objects(region=region, section='Food')
+    query_size = len(base_query)
+    return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
+
+def get_lifestyle_by_region(region, limit, offset):
+    base_query = Article.objects(region=region, section='Lifestyle')
+    query_size = len(base_query)
+    return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
+
 def get_section_articles(region, section, limit, offset):
     base_query = Article.objects(region=region, section="Gossip")
     query_size = len(base_query)
@@ -209,6 +219,8 @@ def get_region_startup(request, region):
     fashion = ArticleSerializer(get_fashion_by_region(region, page_size, offset)[0], many=True).data
     sports = ArticleSerializer(get_sports_by_region(region, page_size, offset)[0], many=True).data
     politics = ArticleSerializer(get_politics_by_region(region, page_size, offset)[0], many=True).data
+    food = ArticleSerializer(get_food_by_region(region, page_size, offset)[0], many=True).data
+    lifestyle = ArticleSerializer(get_lifestyle_by_region(region, page_size, offset)[0], many=True).data
     content = {
         "trending": trending,
         "gossip": gossip,
@@ -217,7 +229,9 @@ def get_region_startup(request, region):
         "headlines": headlines,
         "fashion": fashion,
         "sports": sports,
-        "politics": politics
+        "politics": politics,
+        "food": food,
+        "lifestlye": lifestyle
     }
     return Response(content)
 
@@ -232,6 +246,8 @@ def get_logo_all(request, region):
     fashion = get_region_logos_for_section_all(region, "Fashion")[0]
     sports = get_region_logos_for_section_all(region, "Sports")[0]
     politics = get_region_logos_for_section_all(region, "Politics")[0]
+    food = get_region_logos_for_section_all(region, "Food")[0]
+    lifestyle = get_region_logos_for_section_all(region, "Lifestyle")[0]
     
     content = {
         "gossip": gossip,
@@ -240,7 +256,9 @@ def get_logo_all(request, region):
         "headlines": headlines,
         "fashion": fashion,
         "sports": sports,
-        "politics": politics
+        "politics": politics,
+        "food": food,
+        "lifestyle": lifestyle
     }
     
     return Response(content)
