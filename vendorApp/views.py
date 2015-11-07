@@ -326,7 +326,7 @@ def get_region_food(request, region):
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def get_region_lifestyle(request, region):
-    return Response(generate_output(get_lifestye_by_region, region, request))  
+    return Response(generate_output(get_lifestyle_by_region, region, request))  
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
