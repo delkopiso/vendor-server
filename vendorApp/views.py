@@ -345,5 +345,13 @@ def get_region_section_combo(request, region, sectionA, sectionB, sectionC="", s
 def get_region_logos_for_section(request, region, section):
     return Response(generate_output_sectionwise(get_region_logos_for_section_do, region, section, request))
 
+@api_view(['GET'])
+@renderer_classes((JSONRenderer,))
+def get_section_images(request, region):
+    content = {
+        "trending": "Test Image",
+    }
+    return Response(content)
+
 
   
