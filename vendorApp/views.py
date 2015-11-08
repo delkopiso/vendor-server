@@ -110,11 +110,6 @@ def get_lifestyle_by_region(region, limit, offset):
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
-def get_section_articles(region, section, limit, offset):
-    base_query = Article.objects(region=region, section=section.capitalize())
-    query_size = len(base_query)
-    return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
-
 def get_section_articles_combo(region, sectionA, sectionB, sectionC, sectionD, sectionE, sectionF, sectionG, sectionH, sectionI, limit, offset):
     base_query = Article.objects(region=region, section__in=[sectionA.capitalize(), sectionB.capitalize(), sectionC.capitalize(), sectionD.capitalize(), sectionE.capitalize(), sectionF.capitalize(), sectionG.capitalize(), sectionH.capitalize(), sectionI.capitalize()])
     query_size = len(base_query)
@@ -266,11 +261,6 @@ def get_logo_all(request, region):
 def get_region_articles(request, region):
     return Response(generate_output(get_articles_by_region, region, request))
 
-@api_view(['GET'])
-@renderer_classes((JSONRenderer,))
-def get_region_home(request, region):
-    return Response(generate_output(get_home_articles, region, request))
-
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
@@ -325,11 +315,6 @@ def get_region_food(request, region):
 def get_region_lifestyle(request, region):
     return Response(generate_output(get_lifestyle_by_region, region, request))  
 
-@api_view(['GET'])
-@renderer_classes((JSONRenderer,))
-def get_region_section(request, region, section):
-    return Response(generate_section_output(get_section_articles, section, region, request))  
-
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
@@ -342,13 +327,6 @@ def get_region_section_combo(request, region, sectionA, sectionB, sectionC="", s
 def get_region_logos_for_section(request, region, section):
     return Response(generate_output_sectionwise(get_region_logos_for_section_do, region, section, request))
 
-@api_view(['GET'])
-@renderer_classes((JSONRenderer,))
-def get_section_images(request, region):
-    content = {
-        "trending": "Test Image",
-    }
-    return Response(content)
 
 
   
