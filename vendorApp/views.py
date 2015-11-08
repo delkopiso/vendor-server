@@ -231,7 +231,7 @@ def get_region_startup(request, region):
         "sports": sports,
         "politics": politics,
         "food": food,
-        "lifestlye": lifestyle
+        "lifestyle": lifestyle
     }
     return Response(content)
 
