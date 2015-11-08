@@ -111,7 +111,7 @@ def get_lifestyle_by_region(region, limit, offset):
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
 def get_section_articles(region, section, limit, offset):
-    base_query = Article.objects(region=region, section=section.capitalize())
+    base_query = Article.objects(region=region, section="Tech")
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
