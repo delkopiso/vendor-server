@@ -111,7 +111,7 @@ def get_lifestyle_by_region(region, limit, offset):
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
 def get_section_articles(region, section, limit, offset):
-    base_query = Article.objects(region=region)
+    base_query = Article.objects(region=region, section=section.capitalize())
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
@@ -327,7 +327,7 @@ def get_region_lifestyle(request, region):
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
-def get_region_section(request, section, region):
+def get_region_section(request, region, section):
     return Response(generate_section_output(get_section_articles, section, region, request))  
 
 
