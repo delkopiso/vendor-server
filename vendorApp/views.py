@@ -115,12 +115,10 @@ def get_section_articles(region, section, limit, offset):
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
-
 def get_section_articles_combo(region, sectionA, sectionB, sectionC, sectionD, sectionE, sectionF, sectionG, sectionH, sectionI, limit, offset):
     base_query = Article.objects(region=region, section__in=[sectionA.capitalize(), sectionB.capitalize(), sectionC.capitalize(), sectionD.capitalize(), sectionE.capitalize(), sectionF.capitalize(), sectionG.capitalize(), sectionH.capitalize(), sectionI.capitalize()])
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
-
 
 def get_region_logos_for_section_do(region,section):
     base_query = Article.objects(region=region, section=section.capitalize()).only("logo")
@@ -189,7 +187,6 @@ def generate_section_combo_output(query_func, region, sectionA, sectionB, sectio
         'count': count,
         'results': ArticleSerializer(results[0], many=True).data
     }
-
 
 def generate_output_sectionwise(query_func, region,section, request):
     results = query_func(region, section)
