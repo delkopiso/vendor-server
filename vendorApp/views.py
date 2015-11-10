@@ -120,8 +120,8 @@ def get_funny_by_region(region, limit, offset):
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
-def get_section_articles_combo(region, sectionA, sectionB, sectionC, sectionD, sectionE, sectionF, sectionG, sectionH, sectionI, limit, offset):
-    base_query = Article.objects(region=region, section__in=[sectionA.capitalize(), sectionB.capitalize(), sectionC.capitalize(), sectionD.capitalize(), sectionE.capitalize(), sectionF.capitalize(), sectionG.capitalize(), sectionH.capitalize(), sectionI.capitalize()])
+def get_section_articles_combo(region, sectionA, sectionB, sectionC, sectionD, sectionE, sectionF, sectionG, sectionH, sectionI, sectionJ, sectionK, limit, offset):
+    base_query = Article.objects(region=region, section__in=[sectionA.capitalize(), sectionB.capitalize(), sectionC.capitalize(), sectionD.capitalize(), sectionE.capitalize(), sectionF.capitalize(), sectionG.capitalize(), sectionH.capitalize(), sectionI.capitalize(), sectionJ.capitalize(), sectionK.capitalize()])
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
@@ -172,12 +172,12 @@ def generate_section_output(query_func, region, section, request):
         'results': ArticleSerializer(results[0], many=True).data
     }
 
-def generate_section_combo_output(query_func, region, sectionA, sectionB, sectionC, sectionD, sectionE, sectionF, sectionG, sectionH, sectionI, request):
+def generate_section_combo_output(query_func, region, sectionA, sectionB, sectionC, sectionD, sectionE, sectionF, sectionG, sectionH, sectionI, sectionJ, sectionK, request):
     current_page = int(request.GET.get(PAGE_NUMBER_PARAM, FIRST_PAGE))
     current_page = current_page if current_page > FIRST_PAGE else FIRST_PAGE
     page_size = int(request.GET.get(PAGE_SIZE_PARAM, DEFAULT_PAGE_SIZE))
     offset = page_size * (current_page - 1)
-    results = query_func(region, sectionA, sectionB, sectionC, sectionD, sectionE, sectionF, sectionG, sectionH, sectionI, page_size, offset)
+    results = query_func(region, sectionA, sectionB, sectionC, sectionD, sectionE, sectionF, sectionG, sectionH, sectionI, sectionJ, sectionK, page_size, offset)
     count = results[1]
     last_page = int(math.ceil(count / page_size))
     prev_page = current_page - 1 if current_page > FIRST_PAGE else None
@@ -346,8 +346,8 @@ def get_region_funny(request, region):
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
-def get_region_section_combo(request, region, sectionA, sectionB, sectionC="", sectionD="", sectionE="", sectionF="",sectionG="",sectionH="",sectionI=""):
-    return Response(generate_section_combo_output(get_section_articles_combo, region, sectionA, sectionB, sectionC, sectionD, sectionE, sectionF, sectionG, sectionH, sectionI, request))  
+def get_region_section_combo(request, region, sectionA, sectionB, sectionC="", sectionD="", sectionE="", sectionF="",sectionG="",sectionH="",sectionI="",sectionJ="",sectionK=""):
+    return Response(generate_section_combo_output(get_section_articles_combo, region, sectionA, sectionB, sectionC, sectionD, sectionE, sectionF, sectionG, sectionH, sectionI, sectionJ, sectionK, request))
 
 
 @api_view(['GET'])
