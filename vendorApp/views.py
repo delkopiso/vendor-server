@@ -121,7 +121,7 @@ def get_funny_by_region(region, limit, offset):
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
 def get_art_by_region(region, limit, offset):
-    base_query = Article.objects(region=region, section='Art & Design')
+    base_query = Article.objects(region=region, section='Art')
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
@@ -263,7 +263,7 @@ def get_logo_all(request, region):
     lifestyle = get_region_logos_for_section_all(region, "Lifestyle")[0]
     beauty = get_region_logos_for_section_all(region, "Beauty")[0]
     funny = get_region_logos_for_section_all(region, "Funny")[0]
-    art = get_region_logos_for_section_all(region, "Art & Design")[0]
+    art = get_region_logos_for_section_all(region, "Art")[0]
     
     content = {
         "gossip": gossip,
