@@ -115,6 +115,11 @@ def get_beauty_by_region(region, limit, offset):
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
+def get_funny_by_region(region, limit, offset):
+    base_query = Article.objects(region=region, section='Funny')
+    query_size = len(base_query)
+    return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
+
 def get_section_articles_combo(region, sectionA, sectionB, sectionC, sectionD, sectionE, sectionF, sectionG, sectionH, sectionI, limit, offset):
     base_query = Article.objects(region=region, section__in=[sectionA.capitalize(), sectionB.capitalize(), sectionC.capitalize(), sectionD.capitalize(), sectionE.capitalize(), sectionF.capitalize(), sectionG.capitalize(), sectionH.capitalize(), sectionI.capitalize()])
     query_size = len(base_query)
@@ -219,6 +224,7 @@ def get_region_startup(request, region):
     food = ArticleSerializer(get_food_by_region(region, page_size, offset)[0], many=True).data
     lifestyle = ArticleSerializer(get_lifestyle_by_region(region, page_size, offset)[0], many=True).data
     beauty = ArticleSerializer(get_beauty_by_region(region, page_size, offset)[0], many=True).data
+    funny = ArticleSerializer(get_funny_by_region(region, page_size, offset)[0], many=True).data
     content = {
         "trending": trending,
         "gossip": gossip,
@@ -231,6 +237,7 @@ def get_region_startup(request, region):
         "food": food,
         "lifestyle": lifestyle,
         "beauty": beauty,
+        "funny": funny,
     }
     return Response(content)
 
@@ -248,6 +255,7 @@ def get_logo_all(request, region):
     food = get_region_logos_for_section_all(region, "Food")[0]
     lifestyle = get_region_logos_for_section_all(region, "Lifestyle")[0]
     beauty = get_region_logos_for_section_all(region, "Beauty")[0]
+    funny = get_region_logos_for_section_all(region, "Funny")[0]
     
     content = {
         "gossip": gossip,
@@ -259,7 +267,8 @@ def get_logo_all(request, region):
         "politics": politics,
         "food": food,
         "lifestyle": lifestyle,
-        "beauty": beauty
+        "beauty": beauty,
+        "funny": funny
     }
     
     return Response(content)
@@ -328,6 +337,11 @@ def get_region_lifestyle(request, region):
 @renderer_classes((JSONRenderer,))
 def get_region_beauty(request, region):
     return Response(generate_output(get_beauty_by_region, region, request))  
+
+@api_view(['GET'])
+@renderer_classes((JSONRenderer,))
+def get_region_funny(request, region):
+    return Response(generate_output(get_funny_by_region, region, request))  
 
 
 @api_view(['GET'])
