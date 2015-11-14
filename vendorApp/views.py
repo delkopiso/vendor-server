@@ -130,9 +130,14 @@ def get_travel_by_region(region, limit, offset):
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
+def get_weddings_by_region(region, limit, offset):
+    base_query = Article.objects(region=region, section='Weddings')
+    query_size = len(base_query)
+    return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
-def get_section_articles_combo(region, sectionA, sectionB, sectionC, sectionD, sectionE, sectionF, sectionG, sectionH, sectionI, sectionJ, sectionK, sectionL, sectionM, limit, offset):
-    base_query = Article.objects(region=region, section__in=[sectionA.capitalize(), sectionB.capitalize(), sectionC.capitalize(), sectionD.capitalize(), sectionE.capitalize(), sectionF.capitalize(), sectionG.capitalize(), sectionH.capitalize(), sectionI.capitalize(), sectionJ.capitalize(), sectionK.capitalize(), sectionL.capitalize(), sectionM.capitalize()])
+
+def get_section_articles_combo(region, sectionA, sectionB, sectionC, sectionD, sectionE, sectionF, sectionG, sectionH, sectionI, sectionJ, sectionK, sectionL, sectionM, sectionN, limit, offset):
+    base_query = Article.objects(region=region, section__in=[sectionA.capitalize(), sectionB.capitalize(), sectionC.capitalize(), sectionD.capitalize(), sectionE.capitalize(), sectionF.capitalize(), sectionG.capitalize(), sectionH.capitalize(), sectionI.capitalize(), sectionJ.capitalize(), sectionK.capitalize(), sectionL.capitalize(), sectionM.capitalize(), sectionN.capitalize()])
     query_size = len(base_query)
     return base_query.order_by('-dateAdded', 'mixIndex').skip(offset).limit(limit), query_size
 
@@ -183,12 +188,12 @@ def generate_section_output(query_func, region, section, request):
         'results': ArticleSerializer(results[0], many=True).data
     }
 
-def generate_section_combo_output(query_func, region, sectionA, sectionB, sectionC, sectionD, sectionE, sectionF, sectionG, sectionH, sectionI, sectionJ, sectionK, sectionL, sectionM, request):
+def generate_section_combo_output(query_func, region, sectionA, sectionB, sectionC, sectionD, sectionE, sectionF, sectionG, sectionH, sectionI, sectionJ, sectionK, sectionL, sectionM, sectionN, request):
     current_page = int(request.GET.get(PAGE_NUMBER_PARAM, FIRST_PAGE))
     current_page = current_page if current_page > FIRST_PAGE else FIRST_PAGE
     page_size = int(request.GET.get(PAGE_SIZE_PARAM, DEFAULT_PAGE_SIZE))
     offset = page_size * (current_page - 1)
-    results = query_func(region, sectionA, sectionB, sectionC, sectionD, sectionE, sectionF, sectionG, sectionH, sectionI, sectionJ, sectionK, sectionL, sectionM, page_size, offset)
+    results = query_func(region, sectionA, sectionB, sectionC, sectionD, sectionE, sectionF, sectionG, sectionH, sectionI, sectionJ, sectionK, sectionL, sectionM, sectionN, page_size, offset)
     count = results[1]
     last_page = int(math.ceil(count / page_size))
     prev_page = current_page - 1 if current_page > FIRST_PAGE else None
@@ -238,6 +243,7 @@ def get_region_startup(request, region):
     funny = ArticleSerializer(get_funny_by_region(region, page_size, offset)[0], many=True).data
     art = ArticleSerializer(get_art_by_region(region, page_size, offset)[0], many=True).data
     travel = ArticleSerializer(get_travel_by_region(region, page_size, offset)[0], many=True).data
+    weddings = ArticleSerializer(get_weddings_by_region(region, page_size, offset)[0], many=True).data
     content = {
         "trending": trending,
         "gossip": gossip,
@@ -253,6 +259,7 @@ def get_region_startup(request, region):
         "funny": funny,
         "art": art,
         "travel": travel,
+        "weddings": weddings,
     }
     return Response(content)
 
@@ -273,6 +280,7 @@ def get_logo_all(request, region):
     funny = get_region_logos_for_section_all(region, "Funny")[0]
     art = get_region_logos_for_section_all(region, "Art")[0]
     travel = get_region_logos_for_section_all(region, "Travel")[0]
+    weddings = get_region_logos_for_section_all(region, "Weddings")[0]
     
     content = {
         "gossip": gossip,
@@ -288,6 +296,7 @@ def get_logo_all(request, region):
         "funny": funny,
         "art": art,
         "travel": travel,
+        "weddings": weddings,
     }
     
     return Response(content)
@@ -374,8 +383,13 @@ def get_region_travel(request, region):
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
-def get_region_section_combo(request, region, sectionA, sectionB, sectionC="", sectionD="", sectionE="", sectionF="",sectionG="",sectionH="",sectionI="",sectionJ="",sectionK="",sectionL="",sectionM=""):
-    return Response(generate_section_combo_output(get_section_articles_combo, region, sectionA, sectionB, sectionC, sectionD, sectionE, sectionF, sectionG, sectionH, sectionI, sectionJ, sectionK, sectionL, sectionM, request))
+def get_region_weddings(request, region):
+    return Response(generate_output(get_weddings_by_region, region, request))  
+
+@api_view(['GET'])
+@renderer_classes((JSONRenderer,))
+def get_region_section_combo(request, region, sectionA, sectionB, sectionC="", sectionD="", sectionE="", sectionF="",sectionG="",sectionH="",sectionI="",sectionJ="",sectionK="",sectionL="",sectionM="", sectionN=""):
+    return Response(generate_section_combo_output(get_section_articles_combo, region, sectionA, sectionB, sectionC, sectionD, sectionE, sectionF, sectionG, sectionH, sectionI, sectionJ, sectionK, sectionL, sectionM, sectionN, request))
 
 
 @api_view(['GET'])
